@@ -32,6 +32,10 @@ class HomeScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+
+
+
+
         // VIEW MODEL
         val viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(HomeViewModel::class.java)
 //        viewModel.initializeDataset()

@@ -72,6 +72,16 @@ class HomeViewModel(context: Context): ViewModel() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getDatesBetween(startDate: LocalDate, endDate: LocalDate): List<LocalDate> {
+        val dates = mutableListOf<LocalDate>()
+        var currentDate = startDate
+        while (currentDate <= endDate) {
+            dates.add(currentDate)
+            currentDate = currentDate.plusDays(1)
+        }
+        return dates
+    }
 
 
 
