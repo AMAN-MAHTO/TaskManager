@@ -33,6 +33,13 @@ class NewTask : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val intent = getIntent()
+        if(intent.extras != null) {
+            val selectedDate = intent.getStringExtra("selectedDate")
+            Log.d("newTask",selectedDate.toString())
+        }
+
+
         val viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(HomeViewModel::class.java)
 
         val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu", Locale.ENGLISH)
