@@ -21,6 +21,7 @@ import com.example.taskmanager.databinding.ActivityHomeScreenBinding
 import com.example.taskmanager.mvvm.DatesViewModel
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
+import com.example.taskmanager.utils.Utils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -93,7 +94,7 @@ class HomeScreen : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         // buttons
         binding.imageButtonCreateNewTask.setOnClickListener(){
             val intent = Intent(this,NewTask::class.java)
-            intent.putExtra("selectedDate",datesViewModel.selectedDate.value)
+            intent.putExtra("selectedDate",datesViewModel.selectedDate.value.toString())
             startActivity(intent)
         }
 
@@ -110,18 +111,9 @@ class HomeScreen : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
         calendar.set(p1,p2,p3)
-        var year:String = p1.toString()
-        var month: String
-        var day: String
 
-        if(p3<10){day = "0$p3"
-        }else{day = p3.toString()}
-        if(p2<9){month = "0${p2+1}"}else{month = (p2+1).toString()}
-
-        Log.d("adapterDate", "onDateSet: "+day+"/"+month+"/"+year)
-        val prevSelectedDate = datesViewModel.selectedDate.value
-        datesViewModel.selectedDate.value = LocalDate.parse(day+"/"+month+"/"+year,
-            DateTimeFormatter.ofPattern("dd/MM/uuuu", Locale.ENGLISH))
+        datesViewModel.selectedDate.value = Utils().intToLocalDate(p1,p2,p3)
+        Log.d("adapterDate", "onDateSet: "+datesViewModel.selectedDate.value.toString())
         datesViewModel.centerDate.value = datesViewModel.selectedDate.value
         datesViewModel.getDatesBetween(datesViewModel.centerDate.value!!)
 

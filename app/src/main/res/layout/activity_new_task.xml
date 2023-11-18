@@ -59,6 +59,16 @@
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
+    <ImageButton
+        android:id="@+id/imageButtonCalender"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="32dp"
+        android:src="@drawable/ic_calendar_month_24"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextDate"
+        app:layout_constraintStart_toEndOf="@+id/editTextDate"
+        app:layout_constraintTop_toTopOf="@+id/editTextDate" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
