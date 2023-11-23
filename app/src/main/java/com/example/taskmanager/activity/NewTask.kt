@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.R
@@ -58,6 +59,7 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
 
         binding.buttonCreateTask.setOnClickListener(){
+            //new task is created
             val newTask = Task(
                 binding.editTextTaskName.text.toString(),
                 binding.editTextDescription.text.toString(),
@@ -67,10 +69,13 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             )
             Log.d("taskList", "onCreate: "+newTask.toString())
 
+            // inserting task in database
             GlobalScope.launch {
                 viewModel.taskDatabase.taskDoa().insertTask(newTask)
-
             }
+
+            // starting again the HomeScreen Activity
+            Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
             val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
         }

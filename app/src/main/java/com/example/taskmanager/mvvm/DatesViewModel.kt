@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.time.LocalDate
+import java.util.Calendar
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -14,6 +15,7 @@ class DatesViewModel: ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     val _today: LocalDate = LocalDate.now()
 
+    val _calendar = Calendar.getInstance()
 
     val centerDate = MutableLiveData<LocalDate>(_today)
     val centerPos =  MutableLiveData(centerDate.value!!.dayOfYear - centerDate.value!!.minusMonths(2).dayOfYear)

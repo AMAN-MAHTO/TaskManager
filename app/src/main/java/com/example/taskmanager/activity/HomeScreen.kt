@@ -2,7 +2,6 @@ package com.example.taskmanager.activity
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,21 +17,20 @@ import com.example.taskmanager.models.Task
 
 import com.example.taskmanager.adapter.TaskAdapter
 import com.example.taskmanager.databinding.ActivityHomeScreenBinding
+import com.example.taskmanager.fragments.CalenderSheet
+import com.example.taskmanager.fragments.NewOptionsSheet
 import com.example.taskmanager.mvvm.DatesViewModel
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.Utils
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Locale
 
-class HomeScreen : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class HomeScreen : AppCompatActivity(){
     private val binding: ActivityHomeScreenBinding by lazy {
         ActivityHomeScreenBinding.inflate(layoutInflater)
     }
 
-    private val calendar = Calendar.getInstance()
     lateinit var homeViewModel: HomeViewModel
     lateinit var datesViewModel: DatesViewModel
     lateinit var adapter:AdapterDate
@@ -75,15 +73,17 @@ class HomeScreen : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             this,
             Observer {
                 Log.d("taskList", "onCreate: "+it.toString())
+                if(it!=null){
+                    setUpTaskListView(it)
 
-                homeViewModel.taskDatabase.taskDoa().getTasksByDate(it).observe(this,
-                    Observer {
-                        Log.d("taskList", "onCreate: "+it.toString())
-                        setUpRecyclerViewTaskList(it)
-
-                    })
+                    // updating the state of new Task button
+                    // active --> if the selected date is higher of equal to today
+                    // deactivate --> if the selected date is lower than today
+                    updateCreatNewTaskButtonState(it)
 
 
+
+                }
             }
         )
 
@@ -92,33 +92,42 @@ class HomeScreen : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
 
         // buttons
+
+
+
+        // Create new Task button
         binding.imageButtonCreateNewTask.setOnClickListener(){
-            val intent = Intent(this,NewTask::class.java)
-            intent.putExtra("selectedDate",datesViewModel.selectedDate.value.toString())
-            startActivity(intent)
+//
+            NewOptionsSheet(this).show(supportFragmentManager,"NewOptionsSheet")
         }
 
         //date piccker dialog
         binding.imageButtonCalender.setOnClickListener(){
-            DatePickerDialog(this,this,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(
-                Calendar.DAY_OF_MONTH)).show()
+//
+
+            CalenderSheet(datesViewModel).show(supportFragmentManager,"Calender Sheet")
         }
 
 
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        calendar.set(p1,p2,p3)
-
-        datesViewModel.selectedDate.value = Utils().intToLocalDate(p1,p2,p3)
-        Log.d("adapterDate", "onDateSet: "+datesViewModel.selectedDate.value.toString())
-        datesViewModel.centerDate.value = datesViewModel.selectedDate.value
-        datesViewModel.getDatesBetween(datesViewModel.centerDate.value!!)
-
-
+    private fun updateCreatNewTaskButtonState(it: LocalDate) {
+        binding.imageButtonCreateNewTask.isClickable = it >= datesViewModel._today
     }
+
+    private fun setUpTaskListView(it: LocalDate) {
+        //feacting data form database, and seting up the recyler view
+        homeViewModel.taskDatabase.taskDoa().getTasksByDate(it).observe(this,
+            Observer {
+                Log.d("taskList", "onCreate: "+it.toString())
+                setUpRecyclerViewTaskList(it)
+
+            })
+    }
+
+
+
 
 
     private fun setUpRecyclerViewTaskList(it: List<Task>) {
@@ -137,7 +146,8 @@ class HomeScreen : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         binding.recyclerViewHorizontalDatePicker.scrollToPosition(viewModel.centerPos.value!! - 4)
 
 
-
+        // to update the month and year text view
+        // month and year, value are comming from the first item of recylcer view
         binding.recyclerViewHorizontalDatePicker.addOnScrollListener(object:
             RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -165,10 +175,7 @@ class HomeScreen : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
                 binding.textViewYear.text = ", "+it
             })
 
-        viewModel.selectedDate.observe(this,
-            Observer {
-                calendar.set(it.year,it.monthValue-1,it.dayOfMonth)
-            })
+
 
     }
 
