@@ -33,14 +33,12 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         ActivityNewTaskBinding.inflate(layoutInflater)
     }
     private val calendar = Calendar.getInstance()
+    private lateinit var viewModel:HomeViewModel
 
-    val arrayOfTime = arrayOf("00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00")
-    var startTime = arrayOfTime[0]
-    var endTime = arrayOfTime[0]
+
     @RequiresApi(Build.VERSION_CODES.O)
     val dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)
-    @RequiresApi(Build.VERSION_CODES.O)
-    val timeFormatter = DateTimeFormatter.ofPattern("hh:mm",Locale.ENGLISH)
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,31 +51,27 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         }
 
 
-        val viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(HomeViewModel::class.java)
 
-        setUpSpinnerView()
+
 
 
         binding.buttonCreateTask.setOnClickListener(){
-            //new task is created
-            val newTask = Task(
-                binding.editTextTaskName.text.toString(),
-                binding.editTextDescription.text.toString(),
-                startTime,
-                endTime,
-                LocalDate.parse(binding.editTextDate.text.toString(),dateFormatter)
-            )
-            Log.d("taskList", "onCreate: "+newTask.toString())
 
-            // inserting task in database
-            GlobalScope.launch {
-                viewModel.taskDatabase.taskDoa().insertTask(newTask)
+            if(binding.editTextTaskName.text.isNotEmpty()){
+                //new task is created
+                createTask()
+
+
+                // starting again the HomeScreen Activity
+                Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, HomeScreen::class.java)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this,"Enter Task Name",Toast.LENGTH_SHORT).show()
             }
 
-            // starting again the HomeScreen Activity
-            Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, HomeScreen::class.java)
-            startActivity(intent)
+
         }
 
         binding.imageButtonCalender.setOnClickListener(){
@@ -87,6 +81,20 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         }
 
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createTask() {
+        val newTask = Task(0,
+            binding.editTextTaskName.text.toString(),
+            binding.editTextDescription.text.toString(),
+            LocalDate.parse(binding.editTextDate.text.toString(),dateFormatter)
+        )
+        Log.d("taskList", "onCreate: "+newTask.toString())
+
+        // inserting task in database
+        GlobalScope.launch {
+            viewModel.taskDatabase.taskDoa().insertTask(newTask)
+        }    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpDefaultView(intent: Intent?) {
@@ -100,36 +108,6 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     }
 
 
-    private fun setUpSpinnerView() {
-
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, arrayOfTime)
-        binding.spinnerStartTime.adapter = adapter
-        binding.spinnerEndTime.adapter = adapter
-
-        binding.spinnerStartTime.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//                val startTime = LocalTime.parse(arrayOfTime[p2],timeFormatter)
-                startTime = arrayOfTime[p2]
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                startTime = arrayOfTime[0]
-            }
-
-        }
-
-        binding.spinnerEndTime.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//                val endTime = LocalTime.parse(arrayOfTime[p2],timeFormatter)
-                endTime = arrayOfTime[p2]
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                endTime = arrayOfTime[0]
-            }
-
-        }
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {

@@ -10,6 +10,7 @@ import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.adapter.AdapterDate
@@ -22,7 +23,10 @@ import com.example.taskmanager.fragments.NewOptionsSheet
 import com.example.taskmanager.mvvm.DatesViewModel
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
+import com.example.taskmanager.utils.SwipeGesture
 import com.example.taskmanager.utils.Utils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Calendar
 
@@ -33,7 +37,8 @@ class HomeScreen : AppCompatActivity(){
 
     lateinit var homeViewModel: HomeViewModel
     lateinit var datesViewModel: DatesViewModel
-    lateinit var adapter:AdapterDate
+    lateinit var datesAdapter:AdapterDate
+    lateinit var taskAdapter:TaskAdapter
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -51,8 +56,8 @@ class HomeScreen : AppCompatActivity(){
         datesViewModel._dates.observe(this,
             Observer {
                 Log.d("adapterDate", "setUpHorizontalDatePicker: "+it.toString())
-                adapter = AdapterDate(datesViewModel)
-                adapter.notifyDataSetChanged()
+                datesAdapter = AdapterDate(datesViewModel)
+                datesAdapter.notifyDataSetChanged()
                 setUpHorizontalDatePicker(datesViewModel)
             })
 
@@ -92,13 +97,10 @@ class HomeScreen : AppCompatActivity(){
 
 
         // buttons
-
-
-
         // Create new Task button
         binding.imageButtonCreateNewTask.setOnClickListener(){
 //
-            NewOptionsSheet(this).show(supportFragmentManager,"NewOptionsSheet")
+            NewOptionsSheet(this,datesViewModel).show(supportFragmentManager,"NewOptionsSheet")
         }
 
         //date piccker dialog
@@ -107,6 +109,37 @@ class HomeScreen : AppCompatActivity(){
 
             CalenderSheet(datesViewModel).show(supportFragmentManager,"Calender Sheet")
         }
+
+
+        //swipe gesture
+        val swipeGesture = object : SwipeGesture(this){
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when(direction){
+
+                    ItemTouchHelper.LEFT ->{
+
+                        val taskId = taskAdapter.getTaskId(viewHolder.absoluteAdapterPosition)
+                        taskAdapter.deleteItem(viewHolder.absoluteAdapterPosition)
+                        taskAdapter.notifyDataSetChanged()
+
+                        Log.d("swipeGesture", "onSwiped: taskId = ${taskId}")
+                        GlobalScope.launch {
+                            homeViewModel.taskDatabase.taskDoa().deleteTaskBytaskId(taskId)
+
+
+
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+
+        val itemtouchHelper = ItemTouchHelper(swipeGesture)
+        itemtouchHelper.attachToRecyclerView(binding.recyclerViewTaskList)
 
 
     }
@@ -121,26 +154,25 @@ class HomeScreen : AppCompatActivity(){
         homeViewModel.taskDatabase.taskDoa().getTasksByDate(it).observe(this,
             Observer {
                 Log.d("taskList", "onCreate: "+it.toString())
-                setUpRecyclerViewTaskList(it)
+                setUpRecyclerViewTaskList(it.toMutableList())
 
             })
     }
 
 
-
-
-
-    private fun setUpRecyclerViewTaskList(it: List<Task>) {
-        val adapter = TaskAdapter(this, it)
+    private fun setUpRecyclerViewTaskList(it: MutableList<Task>) {
+        taskAdapter = TaskAdapter(this, it)
         binding.recyclerViewTaskList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerViewTaskList.adapter = adapter
+        binding.recyclerViewTaskList.adapter = taskAdapter
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpHorizontalDatePicker(viewModel: DatesViewModel) {
-        adapter = AdapterDate(viewModel)
+        datesAdapter = AdapterDate(viewModel)
         binding.recyclerViewHorizontalDatePicker.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-        binding.recyclerViewHorizontalDatePicker.adapter = adapter
+        binding.recyclerViewHorizontalDatePicker.adapter = datesAdapter
 
         Log.d("adapterDate", "onCreateMainActivity centerPos  "+viewModel.centerPos.value.toString())
         binding.recyclerViewHorizontalDatePicker.scrollToPosition(viewModel.centerPos.value!! - 4)
@@ -154,7 +186,7 @@ class HomeScreen : AppCompatActivity(){
                 super.onScrolled(recyclerView, dx, dy)
 
                 val firstVisibleItemPosition = recyclerView.getChildLayoutPosition(recyclerView.getChildAt(0))
-                val firstVisibleItemDate = adapter.getItem(firstVisibleItemPosition) // Assuming the date is stored in a property named 'date'
+                val firstVisibleItemDate = datesAdapter.getItem(firstVisibleItemPosition) // Assuming the date is stored in a property named 'date'
 
 
                 viewModel.month.value = firstVisibleItemDate.month.toString()

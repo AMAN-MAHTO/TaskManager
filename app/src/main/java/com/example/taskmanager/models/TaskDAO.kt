@@ -27,4 +27,7 @@ interface TaskDAO {
     @Query("SELECT DISTINCT date FROM task")
     fun getAllDistictDates(): LiveData<List<LocalDate>>
 
+    @Query("DELETE FROM task WHERE taskId = :taskId")
+    fun deleteTaskBytaskId(taskId: Long)
+
 }

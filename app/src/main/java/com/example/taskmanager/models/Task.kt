@@ -9,12 +9,12 @@ data class TaskDataset(
     val date: LocalDate
     )
 
-@Entity(primaryKeys = ["date","startTime"] )
+@Entity
 data class Task(
+    @PrimaryKey(autoGenerate = true)
+    val taskId:Long=0,
     val title: String,
     val description: String,
-    val startTime: String,
-    val endTime: String,
     val date: LocalDate
 )
 

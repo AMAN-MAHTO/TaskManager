@@ -18,7 +18,7 @@ import com.example.taskmanager.databinding.FragmentNewOptionsSheetBinding
 import com.example.taskmanager.mvvm.DatesViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class NewOptionsSheet(context:Context) : BottomSheetDialogFragment() {
+class NewOptionsSheet(context:Context,val datesViewModel: DatesViewModel) : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentNewOptionsSheetBinding
     @RequiresApi(Build.VERSION_CODES.O)
@@ -37,7 +37,6 @@ class NewOptionsSheet(context:Context) : BottomSheetDialogFragment() {
 
         binding.constraintLayoutTask.setOnClickListener(){
             val intent = Intent(context, NewTask::class.java)
-            val datesViewModel = ViewModelProvider(this).get(DatesViewModel::class.java)
             intent.putExtra("selectedDate",datesViewModel.selectedDate.value.toString())
             startActivity(intent)
         }
