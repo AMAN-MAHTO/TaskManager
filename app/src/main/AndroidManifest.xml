@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TaskManager"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activity.NewHabit"
+            android:exported="false" />
         <activity
             android:name=".activity.HomeScreen"
             android:exported="true">

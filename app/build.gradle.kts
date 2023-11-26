@@ -95,6 +95,10 @@ dependencies {
     //RecyclerViewSwipeDecorator
     implementation ("it.xabaras.android:recyclerview-swipedecorator:1.4")
 
+    //gson dependecy
+    implementation ("com.google.code.gson:gson:2.8.8") // Replace with the latest version
+
+
 
 
 

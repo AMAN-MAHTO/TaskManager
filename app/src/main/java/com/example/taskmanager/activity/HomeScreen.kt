@@ -1,6 +1,7 @@
 package com.example.taskmanager.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -77,7 +78,7 @@ class HomeScreen : AppCompatActivity(){
         datesViewModel.selectedDate.observe(
             this,
             Observer {
-                Log.d("taskList", "onCreate: "+it.toString())
+                Log.d("taskList", "onCreate: selected Date"+it.toString())
                 if(it!=null){
                     setUpTaskListView(it)
 
@@ -119,17 +120,35 @@ class HomeScreen : AppCompatActivity(){
 
                     ItemTouchHelper.LEFT ->{
 
-                        val taskId = taskAdapter.getTaskId(viewHolder.absoluteAdapterPosition)
-                        taskAdapter.deleteItem(viewHolder.absoluteAdapterPosition)
-                        taskAdapter.notifyDataSetChanged()
+                        val alertDialogBuilder = AlertDialog.Builder(this@HomeScreen)
 
-                        Log.d("swipeGesture", "onSwiped: taskId = ${taskId}")
-                        GlobalScope.launch {
-                            homeViewModel.taskDatabase.taskDoa().deleteTaskBytaskId(taskId)
+                        alertDialogBuilder.setMessage("Do you want this todo?")
+                        alertDialogBuilder.setCancelable(false)
+                        alertDialogBuilder.setPositiveButton("YES"){_,_, ->
+
+                            val taskId = taskAdapter.getTaskId(viewHolder.absoluteAdapterPosition)
+                            taskAdapter.deleteItem(viewHolder.absoluteAdapterPosition)
+                            taskAdapter.notifyDataSetChanged()
+
+                            Log.d("swipeGesture", "onSwiped: taskId = ${taskId}")
+                            GlobalScope.launch {
+                                homeViewModel.taskDatabase.taskDoa().deleteTaskBytaskId(taskId)
 
 
+
+                            }
 
                         }
+
+                        alertDialogBuilder.setNegativeButton("NO"){_,_, ->
+                            taskAdapter.notifyDataSetChanged()
+                        }
+
+                        val alertDialogBox = alertDialogBuilder.create()
+                        alertDialogBox.show()
+
+
+
 
                     }
 
@@ -153,7 +172,7 @@ class HomeScreen : AppCompatActivity(){
         //feacting data form database, and seting up the recyler view
         homeViewModel.taskDatabase.taskDoa().getTasksByDate(it).observe(this,
             Observer {
-                Log.d("taskList", "onCreate: "+it.toString())
+                Log.d("taskList", "onCreate: list<Task> : "+it.toString())
                 setUpRecyclerViewTaskList(it.toMutableList())
 
             })
@@ -162,6 +181,18 @@ class HomeScreen : AppCompatActivity(){
 
     private fun setUpRecyclerViewTaskList(it: MutableList<Task>) {
         taskAdapter = TaskAdapter(this, it)
+        //checkbox, callback listerner implementation
+        taskAdapter.setOnCheckBoxChangeListener(object : TaskAdapter.onCheckBoxChangeListener{
+            override fun onChange(taskId:Long,isDone: Boolean) {
+                Log.d("taskList", "onChange: box change state, ${taskId}")
+                GlobalScope.launch {
+                    homeViewModel.taskDatabase.taskDoa().updateIsDone(taskId,isDone)
+
+                }
+            }
+
+        }
+        )
         binding.recyclerViewTaskList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewTaskList.adapter = taskAdapter
 

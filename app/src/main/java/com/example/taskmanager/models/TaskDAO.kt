@@ -30,4 +30,7 @@ interface TaskDAO {
     @Query("DELETE FROM task WHERE taskId = :taskId")
     fun deleteTaskBytaskId(taskId: Long)
 
+    @Query("UPDATE Task SET isDone = :isDone WHERE taskId = :taskId")
+    fun updateIsDone(taskId:Long,isDone: Boolean)
+
 }

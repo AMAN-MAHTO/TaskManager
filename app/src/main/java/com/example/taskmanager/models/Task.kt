@@ -15,7 +15,9 @@ data class Task(
     val taskId:Long=0,
     val title: String,
     val description: String,
-    val date: LocalDate
+    val date: LocalDate,
+    val isDone: Boolean = false
 )
+
 
 

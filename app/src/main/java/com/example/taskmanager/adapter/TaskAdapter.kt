@@ -4,24 +4,39 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.R
 import com.example.taskmanager.models.Task
+import kotlinx.coroutines.GlobalScope
 
 
 class TaskAdapter(val context:Context, var dataset: MutableList<Task>): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>()
     {
-    inner class TaskViewHolder(item:View) : RecyclerView.ViewHolder(item){
+
+        private lateinit var mListener: onCheckBoxChangeListener
+    interface onCheckBoxChangeListener{
+        fun onChange(taskId:Long,isDone: Boolean)
+    }
+
+        fun setOnCheckBoxChangeListener(listener: onCheckBoxChangeListener){
+            mListener = listener
+        }
+
+    inner class TaskViewHolder(item:View,listener: onCheckBoxChangeListener) : RecyclerView.ViewHolder(item){
         val textViewTitle = item.findViewById<TextView>(R.id.textViewTitle)
         val textViewDescription = item.findViewById<TextView>(R.id.textViewDescription)
+        val checkBox = item.findViewById<CheckBox>(R.id.checkBoxTask)
+
+
 
     }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_task_view, parent, false)
-            return TaskViewHolder(view)
+            return TaskViewHolder(view,mListener)
         }
 
         override fun getItemCount(): Int {
@@ -32,6 +47,13 @@ class TaskAdapter(val context:Context, var dataset: MutableList<Task>): Recycler
             holder.textViewTitle.text = dataset[position].title.toString()
             holder.textViewDescription.text = dataset[position].description.toString()
 
+            holder.checkBox.isChecked = dataset[position].isDone
+            holder.checkBox.setOnCheckedChangeListener { _, b ->
+                if (position != RecyclerView.NO_POSITION) {
+                    val taskId = dataset[position].taskId
+                    mListener.onChange(taskId,b)
+                }
+            }
 
 
         }

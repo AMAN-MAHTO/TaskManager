@@ -6,24 +6,24 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [Task::class], version = 1)
+@Database(entities = [Task::class,Todo::class], version = 1)
 @TypeConverters(Converters::class)
-abstract class TaskDatabase: RoomDatabase() {
+abstract class MainDatabase: RoomDatabase() {
 
     abstract fun taskDoa(): TaskDAO
 
     companion object{
 
         @Volatile
-        private var INSTACE: TaskDatabase? = null
+        private var INSTACE: MainDatabase? = null
 
-        fun getDatabase(context: Context): TaskDatabase{
+        fun getDatabase(context: Context): MainDatabase{
 
             if(INSTACE == null){
                 synchronized(this){
                     INSTACE = Room.databaseBuilder(
                         context.applicationContext,
-                        TaskDatabase::class.java,
+                        MainDatabase::class.java,
                         "TaskDB"
                     ).build()
 

@@ -2,14 +2,12 @@ package com.example.taskmanager.mvvm
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.taskmanager.models.Converters
 import com.example.taskmanager.models.Task
-import com.example.taskmanager.models.TaskDatabase
+import com.example.taskmanager.models.MainDatabase
 import com.example.taskmanager.models.TaskDataset
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,7 +18,7 @@ class HomeViewModel(context: Context): ViewModel() {
 
     // initializing database instance
 
-    var taskDatabase = TaskDatabase.getDatabase(context)
+    var taskDatabase = MainDatabase.getDatabase(context)
 
     @RequiresApi(Build.VERSION_CODES.O)
     val dataset: Array<TaskDataset> = arrayOf(
