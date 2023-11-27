@@ -98,6 +98,14 @@ dependencies {
     //gson dependecy
     implementation ("com.google.code.gson:gson:2.8.8") // Replace with the latest version
 
+    //responsive layout ( https://github.com/intuit/sdp )
+    implementation ("com.intuit.sdp:sdp-android:1.1.0")
+
+    //responsive layout ( https://github.com/intuit/ssp )
+    implementation ("com.intuit.ssp:ssp-android:1.1.0")
+
+
+
 
 
 

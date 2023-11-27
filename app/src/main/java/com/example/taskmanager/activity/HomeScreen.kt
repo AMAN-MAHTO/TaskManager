@@ -250,34 +250,3 @@ class HomeScreen : AppCompatActivity(){
 
 
 
-
-
-
-
-
-
-//
-//// ALL DATES WITH TASK
-//homeViewModel.allDistinctDates.observe(
-//this,
-//Observer {
-//    if(!it.isEmpty()){
-//
-//        var sortedIt  = it.sortedBy {
-//            it.dayOfYear
-//        }
-//
-//        Log.d("taskList", "onCreate: allDistinctDatessorted: "+sortedIt.toString())
-//        val adapter = DateAdapter(this,sortedIt, viewModel)
-//        binding.recylerViewDate.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-//        binding.recylerViewDate.adapter = adapter
-//        homeViewModel.taskDatabase.taskDoa().getTasksByDate(sortedIt[0]).observe(this,
-//            Observer {
-//                Log.d("taskList", "onCreate: "+it.toString())
-//                setUpRecyclerViewTaskList(it)
-//
-//            })
-//
-//    }
-//}
-//)
