@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.example.taskmanager.R
+import com.example.taskmanager.activity.NewHabit
 import com.example.taskmanager.activity.NewTask
 import com.example.taskmanager.databinding.FragmentNewOptionsSheetBinding
 import com.example.taskmanager.mvvm.DatesViewModel
@@ -27,7 +28,9 @@ class NewOptionsSheet(context:Context,val datesViewModel: DatesViewModel) : Bott
 
 
         binding.constraintLayoutHabit.setOnClickListener(){
-            Log.d("NewOptionsSheet", "onViewCreated: habit clicked")
+            val intent = Intent(context, NewHabit::class.java)
+            intent.putExtra("selectedDate",datesViewModel.selectedDate.value.toString())
+            startActivity(intent)
         }
 
         binding.constraintLayoutRecurringTask.setOnClickListener(){

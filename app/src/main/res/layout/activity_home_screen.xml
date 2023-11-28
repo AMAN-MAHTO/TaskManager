@@ -11,8 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.05"
-         />
+        app:layout_constraintGuide_percent="0.005" />
 
 
 
@@ -32,9 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_32sdp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:text="TextView"
-        android:textSize="@dimen/_24ssp"
+        android:textSize="@dimen/_14ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="@dimen/_24ssp"
+        android:textSize="@dimen/_14ssp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewMonth"
         app:layout_constraintStart_toEndOf="@+id/textViewMonth" />
 
@@ -68,9 +67,10 @@
 
     <ImageButton
         android:id="@+id/imageButtonCalender"
-        android:layout_width="@dimen/_32sdp"
-        android:layout_height="@dimen/_32sdp"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
         android:layout_marginEnd="@dimen/_8sdp"
+        android:background= "@null"
         app:layout_constraintBottom_toBottomOf="@+id/textViewYear"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textViewYear"

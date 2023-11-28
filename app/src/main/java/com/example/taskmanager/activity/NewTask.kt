@@ -18,6 +18,7 @@ import com.example.taskmanager.databinding.ActivityNewTaskBinding
 import com.example.taskmanager.models.Task
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
+import com.example.taskmanager.utils.DatePickerUtil
 import com.example.taskmanager.utils.Utils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class NewTask : AppCompatActivity(){
     private val binding: ActivityNewTaskBinding by lazy {
         ActivityNewTaskBinding.inflate(layoutInflater)
     }
@@ -45,23 +46,24 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+
+        // get intent
         val intent = getIntent()
         if(intent.extras != null) {
             setUpDefaultView(intent)
         }
 
-
+        // homeViewModel instance
         viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(HomeViewModel::class.java)
 
 
 
-
+        // create new task
         binding.buttonCreateTask.setOnClickListener(){
 
             if(binding.editTextTaskName.text.isNotEmpty()){
                 //new task is created
                 createTask()
-
 
                 // starting again the HomeScreen Activity
                 Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
@@ -74,9 +76,14 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
         }
 
+        // date picker dialog
+        val datePicker = DatePickerUtil(this)
+        val datePickerListener = DatePickerDialog.OnDateSetListener{p0: DatePicker?, p1: Int, p2: Int, p3: Int ->
+            datePicker.calendar.set(p1,p2,p3)
+            binding.editTextDate.setText((Utils().intToLocalDate(p1,p2,p3)).toString())
+        }
         binding.imageButtonCalender.setOnClickListener(){
-            DatePickerDialog(this,this,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(
-                Calendar.DAY_OF_MONTH)).show()
+            datePicker.showDatePickerDialog(datePickerListener)
 
         }
 
@@ -107,11 +114,4 @@ class NewTask : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
     }
 
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        calendar.set(p1,p2+1,p3)
-        binding.editTextDate.setText((Utils().intToLocalDate(p1,p2,p3)).toString())
-    }
 }

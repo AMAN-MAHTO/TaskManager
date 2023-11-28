@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/_32sdp"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_4sdp">
 
@@ -11,10 +11,11 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
         android:text="mon"
+        android:textSize="@dimen/_12ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,15 +25,13 @@
         android:id="@+id/textViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:layout_marginBottom="@dimen/_6sdp"
         android:text="1"
-        android:textSize="@dimen/_16ssp"
+        android:textSize="@dimen/_12ssp"
+
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textViewDay"
+        app:layout_constraintStart_toStartOf="@+id/textViewDay"
         app:layout_constraintTop_toBottomOf="@+id/textViewDay" />
 </androidx.constraintlayout.widget.ConstraintLayout>

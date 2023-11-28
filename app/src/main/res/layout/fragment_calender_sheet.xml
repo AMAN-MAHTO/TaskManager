@@ -21,7 +21,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginBottom="@dimen/_4sdp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/calendarView"
         app:layout_constraintStart_toStartOf="@+id/calendarView"
         app:layout_constraintTop_toBottomOf="@+id/calendarView">
@@ -29,8 +31,8 @@
         <Button
             android:id="@+id/buttonCancle"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="cancel" />
 
         <Button

@@ -17,12 +17,12 @@
             android:id="@+id/constraintLayoutHabit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_20sdp">
+            android:padding="@dimen/_14sdp">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="@dimen/_32sdp"
-                android:layout_height="@dimen/_32sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:src="@drawable/ic_habit"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -55,12 +55,12 @@
             android:id="@+id/constraintLayoutRecurringTask"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_20sdp">
+            android:padding="@dimen/_14sdp">
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="@dimen/_32sdp"
-                android:layout_height="@dimen/_32sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:src="@drawable/ic_recurring_task"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -93,12 +93,12 @@
             android:id="@+id/constraintLayoutTask"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_20sdp">
+            android:padding="@dimen/_14sdp">
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="@dimen/_32sdp"
-                android:layout_height="@dimen/_32sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:src="@drawable/ic_task"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
