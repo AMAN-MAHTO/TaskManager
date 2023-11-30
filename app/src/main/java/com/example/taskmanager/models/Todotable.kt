@@ -6,8 +6,8 @@ import java.time.LocalDate
 
 
 @Entity
-data class Todo(
+data class Todotable(
     @PrimaryKey
     val date: LocalDate,
-    val list: Array<Long>
+    var taskIds: List<Long>
 )

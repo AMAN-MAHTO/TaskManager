@@ -70,6 +70,7 @@ class HomeViewModel(context: Context): ViewModel() {
         }
     }
 
+    //get dates between returns the, localdate list of all the date in between given date input
     @RequiresApi(Build.VERSION_CODES.O)
     fun getDatesBetween(startDate: LocalDate, endDate: LocalDate): List<LocalDate> {
         val dates = mutableListOf<LocalDate>()

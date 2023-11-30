@@ -37,8 +37,7 @@ class NewTask : AppCompatActivity(){
     private lateinit var viewModel:HomeViewModel
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    val dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -67,8 +66,8 @@ class NewTask : AppCompatActivity(){
 
                 // starting again the HomeScreen Activity
                 Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, HomeScreen::class.java)
-                startActivity(intent)
+
+                startActivity(Intent(this, HomeScreen::class.java))
             }else{
                 Toast.makeText(this,"Enter Task Name",Toast.LENGTH_SHORT).show()
             }
@@ -91,17 +90,26 @@ class NewTask : AppCompatActivity(){
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createTask() {
-        val newTask = Task(0,
-            binding.editTextTaskName.text.toString(),
-            binding.editTextDescription.text.toString(),
-            LocalDate.parse(binding.editTextDate.text.toString(),dateFormatter)
-        )
-        Log.d("taskList", "onCreate: "+newTask.toString())
+        val name = binding.editTextTaskName.text.toString()
+        val desc = binding.editTextDescription.text.toString()
+        val date = LocalDate.parse(binding.editTextDate.text.toString(),Utils().dateFormatter)
 
-        // inserting task in database
-        GlobalScope.launch {
-            viewModel.taskDatabase.taskDoa().insertTask(newTask)
-        }    }
+        if(name.isNotEmpty() && desc.isNotEmpty() && date.toString().isNotEmpty()) {
+            val newTask = Task(0,name, desc, date)
+            Log.d("taskList", "onCreate: " + newTask.toString())
+
+            // inserting task in database
+            GlobalScope.launch {
+                //insert task in task Table
+                val taskId = viewModel.taskDatabase.taskDoa().insertTask(newTask)
+                //enter taskId in TodoTable list
+                viewModel.taskDatabase.todotableDoa()
+                    .insertTaskIdIntoTodoListByDate(date, taskId)
+            }
+        }else{
+            Toast.makeText(this, "fill all the fields", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpDefaultView(intent: Intent?) {

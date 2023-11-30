@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class Utils {
+    @RequiresApi(Build.VERSION_CODES.O)
+    val dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun intToLocalDate(p1: Int, p2: Int, p3: Int): LocalDate {

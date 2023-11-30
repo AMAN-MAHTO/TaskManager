@@ -22,13 +22,17 @@ class Converters {
     }
 
     @TypeConverter
-    fun stringToArray(value: String): Array<Long> {
-        val listType = object : TypeToken<ArrayList<Long>>() {}.type
-        return Gson().fromJson(value, listType)
+    fun stringToList(value: String): List<Long> {
+        return try {
+            val listType = object : TypeToken<List<Long>>() {}.type
+            Gson().fromJson(value, listType)
+        } catch (e: Exception) {
+            emptyList() // Handle conversion error by returning an empty list or another default value
+        }
     }
 
     @TypeConverter
-    fun fromArrayList(list: Array<Long>): String {
+    fun fromListToString(list: List<Long>): String {
         return Gson().toJson(list)
     }
 

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +22,7 @@ import com.example.taskmanager.adapter.TaskAdapter
 import com.example.taskmanager.databinding.ActivityHomeScreenBinding
 import com.example.taskmanager.fragments.CalenderSheet
 import com.example.taskmanager.fragments.NewOptionsSheet
+import com.example.taskmanager.models.Converters
 import com.example.taskmanager.mvvm.DatesViewModel
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
@@ -30,6 +32,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Calendar
+import kotlin.math.log
 
 class HomeScreen : AppCompatActivity(){
     private val binding: ActivityHomeScreenBinding by lazy {
@@ -170,12 +173,57 @@ class HomeScreen : AppCompatActivity(){
 
     private fun setUpTaskListView(it: LocalDate) {
         //feacting data form database, and seting up the recyler view
-        homeViewModel.taskDatabase.taskDoa().getTasksByDate(it).observe(this,
-            Observer {
-                Log.d("taskList", "onCreate: list<Task> : "+it.toString())
-                setUpRecyclerViewTaskList(it.toMutableList())
+//        homeViewModel.taskDatabase.taskDoa().getTasksByDate(it).observe(this,
+//            Observer {
+//                Log.d("taskList", "onCreate: getTasksByDate list<Task> : "+it.toString())
+//                setUpRecyclerViewTaskList(it.toMutableList())
+//
+//            })
 
-            })
+//        homeViewModel.taskDatabase.taskDoa().getTaskListByDate(it).observe(
+//            this,
+//            Observer{
+//
+//                Log.d("taskList", "onCreate: getTaskListByDate list<Task> : "+it.toString())
+//                setUpRecyclerViewTaskList(it.toMutableList())
+//            }
+//
+//        )
+
+        //fecthing ids by date, but it return string, so converting it into list<long>,
+        //the fetching tasks if the id is in the taskList
+        homeViewModel.taskDatabase.taskDoa().getTaskIds(it).observe(
+            this,
+            Observer {
+
+                if(it != null) {
+                    Log.d("taskList", "onCreate: getTaskListByDate list<TaskId> : "+it.toString())
+                    val taskIds = Converters().stringToList(it)
+                    Log.d("taskList", "getTaskListByDate: ${taskIds}")
+                    homeViewModel.taskDatabase.taskDoa().getTaskListByIds(taskIds).observe(
+                        this,
+                        Observer {
+                            Log.d(
+                                "taskList",
+                                "onCreate: getTaskListByIds list<Task> : " + it.toString()
+                            )
+                            setUpRecyclerViewTaskList(it.toMutableList())
+                        }
+                    )
+                }else{
+                    setUpRecyclerViewTaskList(mutableListOf())
+
+                    Toast.makeText(this, "no todo", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+
+        val s = Converters().fromListToString(listOf(1,2,3,4))
+        val l = Converters().stringToList(s)
+        Log.d("taskList", "setUpTaskListView: ${s} ${l}")
+
+
+
     }
 
 
