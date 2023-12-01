@@ -6,13 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [Task::class,Todotable::class,todoData::class], version = 1)
+@Database(entities = [todoData::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class MainDatabase: RoomDatabase() {
 
-    abstract fun taskDoa(): TaskDAO
 
-    abstract fun todotableDoa(): TodotableDAO
 
     abstract fun todoDataDoa():todoDataDAO
 

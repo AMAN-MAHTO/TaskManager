@@ -5,16 +5,12 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import com.example.taskmanager.R
 import com.example.taskmanager.databinding.ActivityNewHabitBinding
-import com.example.taskmanager.models.Task
-import com.example.taskmanager.models.Todotable
+import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.DatePickerUtil
@@ -84,7 +80,7 @@ class NewHabit : AppCompatActivity() {
 
 
                 GlobalScope.launch {
-                    createNewDailyHabit(sDate, eDate, name, desc)
+                    createNewHabit(sDate, eDate, name, desc)
                 }
 
                 startActivity(Intent(this, HomeScreen::class.java))
@@ -108,7 +104,7 @@ class NewHabit : AppCompatActivity() {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
             if(daysCount.isNotEmpty()) {
-                val ed = sd.plusDays(daysCount.toString().toLong())
+                val ed = sd.plusDays(daysCount.toString().toLong() - 1)
                 binding.editTextDateED.setText(ed.toString())
             }else{
                 binding.editTextDateED.setText(sd.toString())
@@ -116,35 +112,10 @@ class NewHabit : AppCompatActivity() {
         }
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun createNewDailyHabit(sDate: LocalDate, eDate: LocalDate, name:String, description:String) {
-        val taskId = viewModel.taskDatabase.taskDoa().insertTask(Task(0,name,description,sDate))
-        Log.d("Habit", "createNewDailyHabit: taskId ${taskId}")
-        val dates = mutableListOf<LocalDate>()
-        var date = sDate
-        while (date<=eDate){
-            dates.add(date)
-            date = date.plusDays(1)
-        }
-        Log.d("Habit", "createNewDailyHabit: dates ${dates}")
-
-        val todolist = viewModel.taskDatabase.todotableDoa().getTodosByDates(dates)
-        val existingDateMap = todolist.associateBy { it.date }
-        Log.d("Habit", "createNewDailyHabit: existingDateMap ${existingDateMap}")
-
-        val modifiedTodos = dates.map {
-            val currentTodo = existingDateMap[it]
-            if(currentTodo != null){
-                val updatedTaskIds = (currentTodo.taskIds + taskId).distinct()
-                currentTodo.copy(taskIds = updatedTaskIds)
-            }else{
-                Todotable(it, listOf(taskId))
-            }
-        }
-        Log.d("Habit", "createNewDailyHabit: modifiedTodos ${modifiedTodos}")
-
-
-        viewModel.taskDatabase.todotableDoa().insertOrUpdateTodos(modifiedTodos)
-
+    private suspend fun createNewHabit(sDate: LocalDate, eDate: LocalDate, name:String, description:String){
+        val newTodo = todoData(0, sDate,eDate, emptyList(),name,description)
+        viewModel.taskDatabase.todoDataDoa().insertTodoData(newTodo)
     }
 }

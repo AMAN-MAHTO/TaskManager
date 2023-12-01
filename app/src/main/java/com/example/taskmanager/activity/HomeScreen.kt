@@ -2,13 +2,12 @@ package com.example.taskmanager.activity
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.DatePickerDialog
+
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.DatePicker
-import android.widget.Toast
+
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,23 +15,23 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.adapter.AdapterDate
-import com.example.taskmanager.models.Task
+import com.example.taskmanager.adapter.AdapterTodo
 
-import com.example.taskmanager.adapter.TaskAdapter
+
 import com.example.taskmanager.databinding.ActivityHomeScreenBinding
 import com.example.taskmanager.fragments.CalenderSheet
 import com.example.taskmanager.fragments.NewOptionsSheet
-import com.example.taskmanager.models.Converters
+
+import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.DatesViewModel
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.SwipeGesture
-import com.example.taskmanager.utils.Utils
+
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.util.Calendar
-import kotlin.math.log
+
 
 class HomeScreen : AppCompatActivity(){
     private val binding: ActivityHomeScreenBinding by lazy {
@@ -42,7 +41,8 @@ class HomeScreen : AppCompatActivity(){
     lateinit var homeViewModel: HomeViewModel
     lateinit var datesViewModel: DatesViewModel
     lateinit var datesAdapter:AdapterDate
-    lateinit var taskAdapter:TaskAdapter
+//    lateinit var taskAdapter:TaskAdapter
+    lateinit var todoAdapter:AdapterTodo
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -116,8 +116,16 @@ class HomeScreen : AppCompatActivity(){
 
 
         //swipe gesture
+        setUpSwipeGesture()
+
+
+
+    }
+
+    private fun setUpSwipeGesture() {
         val swipeGesture = object : SwipeGesture(this){
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when(direction){
 
@@ -128,14 +136,15 @@ class HomeScreen : AppCompatActivity(){
                         alertDialogBuilder.setMessage("Do you want this todo?")
                         alertDialogBuilder.setCancelable(false)
                         alertDialogBuilder.setPositiveButton("YES"){_,_, ->
-
-                            val taskId = taskAdapter.getTaskId(viewHolder.absoluteAdapterPosition)
-                            taskAdapter.deleteItem(viewHolder.absoluteAdapterPosition)
-                            taskAdapter.notifyDataSetChanged()
+                            // taskAdapter -> todoAdapter
+                            val taskId = todoAdapter.getTaskId(viewHolder.absoluteAdapterPosition)
+                            todoAdapter.deleteItem(viewHolder.absoluteAdapterPosition)
+                            todoAdapter.notifyDataSetChanged()
 
                             Log.d("swipeGesture", "onSwiped: taskId = ${taskId}")
                             GlobalScope.launch {
-                                homeViewModel.taskDatabase.taskDoa().deleteTaskBytaskId(taskId)
+                                // taskDoa.deleteTaskBytaskId -> todoDataDoa.deleteTodoBytaskId
+                                homeViewModel.taskDatabase.todoDataDoa().deleteTodoBytaskId(taskId)
 
 
 
@@ -144,7 +153,7 @@ class HomeScreen : AppCompatActivity(){
                         }
 
                         alertDialogBuilder.setNegativeButton("NO"){_,_, ->
-                            taskAdapter.notifyDataSetChanged()
+                            todoAdapter.notifyDataSetChanged()
                         }
 
                         val alertDialogBox = alertDialogBuilder.create()
@@ -161,91 +170,58 @@ class HomeScreen : AppCompatActivity(){
         }
 
         val itemtouchHelper = ItemTouchHelper(swipeGesture)
-        itemtouchHelper.attachToRecyclerView(binding.recyclerViewTaskList)
-
-
-    }
+        itemtouchHelper.attachToRecyclerView(binding.recyclerViewTaskList)    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateCreatNewTaskButtonState(it: LocalDate) {
         binding.imageButtonCreateNewTask.isClickable = it >= datesViewModel._today
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpTaskListView(it: LocalDate) {
-        //feacting data form database, and seting up the recyler view
-//        homeViewModel.taskDatabase.taskDoa().getTasksByDate(it).observe(this,
-//            Observer {
-//                Log.d("taskList", "onCreate: getTasksByDate list<Task> : "+it.toString())
-//                setUpRecyclerViewTaskList(it.toMutableList())
-//
-//            })
 
-//        homeViewModel.taskDatabase.taskDoa().getTaskListByDate(it).observe(
-//            this,
-//            Observer{
-//
-//                Log.d("taskList", "onCreate: getTaskListByDate list<Task> : "+it.toString())
-//                setUpRecyclerViewTaskList(it.toMutableList())
-//            }
-//
-//        )
 
-        //fecthing ids by date, but it return string, so converting it into list<long>,
-        //the fetching tasks if the id is in the taskList
-        homeViewModel.taskDatabase.taskDoa().getTaskIds(it).observe(
+        homeViewModel.taskDatabase.todoDataDoa().getTodoByDate(it).observe(
             this,
             Observer {
 
-                if(it != null) {
-                    Log.d("taskList", "onCreate: getTaskListByDate list<TaskId> : "+it.toString())
-                    val taskIds = Converters().stringToList(it)
-                    Log.d("taskList", "getTaskListByDate: ${taskIds}")
-                    homeViewModel.taskDatabase.taskDoa().getTaskListByIds(taskIds).observe(
-                        this,
-                        Observer {
-                            Log.d(
-                                "taskList",
-                                "onCreate: getTaskListByIds list<Task> : " + it.toString()
-                            )
-                            setUpRecyclerViewTaskList(it.toMutableList())
-                        }
-                    )
-                }else{
-                    setUpRecyclerViewTaskList(mutableListOf())
+                setUpRecyclerViewTodoList(it.toMutableList())
 
-                    Toast.makeText(this, "no todo", Toast.LENGTH_SHORT).show()
-                }
             }
         )
 
-        val s = Converters().fromListToString(listOf(1,2,3,4))
-        val l = Converters().stringToList(s)
-        Log.d("taskList", "setUpTaskListView: ${s} ${l}")
+
 
 
 
     }
 
+    private fun setUpRecyclerViewTodoList(it: MutableList<todoData>) {
 
-    private fun setUpRecyclerViewTaskList(it: MutableList<Task>) {
-        taskAdapter = TaskAdapter(this, it)
+        todoAdapter = AdapterTodo(this, it)
         //checkbox, callback listerner implementation
-        taskAdapter.setOnCheckBoxChangeListener(object : TaskAdapter.onCheckBoxChangeListener{
-            override fun onChange(taskId:Long,isDone: Boolean) {
-                Log.d("taskList", "onChange: box change state, ${taskId}")
+        todoAdapter.setOnCheckBoxChangeListener(object : AdapterTodo.onCheckBoxChangeListener{
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onChange(id:Long, isDone: Boolean) {
+                Log.d("taskList", "onChange: box change state, ${id}")
                 GlobalScope.launch {
-                    homeViewModel.taskDatabase.taskDoa().updateIsDone(taskId,isDone)
+                    homeViewModel.taskDatabase.todoDataDoa().updateIsDone(id,isDone)
 
                 }
+
             }
 
         }
         )
         binding.recyclerViewTaskList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerViewTaskList.adapter = taskAdapter
+        binding.recyclerViewTaskList.adapter = todoAdapter
 
 
     }
+
+
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpHorizontalDatePicker(viewModel: DatesViewModel) {

@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.R
 import com.example.taskmanager.databinding.ActivityNewTaskBinding
-import com.example.taskmanager.models.Task
+
 import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
@@ -96,17 +96,7 @@ class NewTask : AppCompatActivity(){
         val date = LocalDate.parse(binding.editTextDate.text.toString(),Utils().dateFormatter)
 
         if(name.isNotEmpty() && desc.isNotEmpty() && date.toString().isNotEmpty()) {
-            val newTask = Task(0,name, desc, date)
-            Log.d("taskList", "onCreate: " + newTask.toString())
 
-            // inserting task in database
-            GlobalScope.launch {
-                //insert task in task Table
-                val taskId = viewModel.taskDatabase.taskDoa().insertTask(newTask)
-                //enter taskId in TodoTable list
-                viewModel.taskDatabase.todotableDoa()
-                    .insertTaskIdIntoTodoListByDate(date, taskId)
-            }
 
             //todoData insert new task
             GlobalScope.launch {

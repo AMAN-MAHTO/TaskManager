@@ -7,12 +7,12 @@ import java.time.LocalDate
 @Entity
 data class todoData(
     @PrimaryKey(autoGenerate = true)
-    val id:Int = 0,
+    val id:Long = 0,
     val startDate:LocalDate,
     val endDate: LocalDate,
     val weekDay:List<Int>,
     val title: String,
     val description: String,
-    val isDone: Int = 0
+    val isDone: Boolean = false
 
 )
