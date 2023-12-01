@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.R
 import com.example.taskmanager.databinding.ActivityNewTaskBinding
 import com.example.taskmanager.models.Task
+import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.DatePickerUtil
@@ -105,6 +106,12 @@ class NewTask : AppCompatActivity(){
                 //enter taskId in TodoTable list
                 viewModel.taskDatabase.todotableDoa()
                     .insertTaskIdIntoTodoListByDate(date, taskId)
+            }
+
+            //todoData insert new task
+            GlobalScope.launch {
+                val newTodo = todoData(0,date,date, emptyList(),name,desc)
+                viewModel.taskDatabase.todoDataDoa().insertTodoData(newTodo)
             }
         }else{
             Toast.makeText(this, "fill all the fields", Toast.LENGTH_SHORT).show()

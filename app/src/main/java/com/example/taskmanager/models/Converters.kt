@@ -36,6 +36,22 @@ class Converters {
         return Gson().toJson(list)
     }
 
+    //     list<int> <-> string
+    @TypeConverter
+    fun fromStringToListOfInt(value: String):List<Int>{
+        return try {
+            val type = object : TypeToken<List<Int>>() {}.type
+            Gson().fromJson(value, type)
+        } catch (e:Exception){
+            emptyList()
+        }
+    }
+
+    @TypeConverter
+    fun fromListofIntToString(value: List<Int>):String{
+        return Gson().toJson(value)
+    }
+
 
 
 
