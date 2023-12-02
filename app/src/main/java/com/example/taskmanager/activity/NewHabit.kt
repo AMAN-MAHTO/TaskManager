@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.databinding.ActivityNewHabitBinding
+import com.example.taskmanager.models.Habit
 import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
@@ -115,7 +116,8 @@ class NewHabit : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun createNewHabit(sDate: LocalDate, eDate: LocalDate, name:String, description:String){
-        val newTodo = todoData(0, sDate,eDate, emptyList(),name,description)
-        viewModel.taskDatabase.todoDataDoa().insertTodoData(newTodo)
+
+        val newHabit = Habit(0, name, description,Habit.HabitRangeType.CONTINUOUS,sDate,eDate)
+        viewModel.taskDatabase.habitDoa().insert(newHabit)
     }
 }

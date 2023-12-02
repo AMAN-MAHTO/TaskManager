@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.R
 import com.example.taskmanager.databinding.ActivityNewTaskBinding
+import com.example.taskmanager.models.Task
 
 import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.HomeViewModel
@@ -100,8 +101,8 @@ class NewTask : AppCompatActivity(){
 
             //todoData insert new task
             GlobalScope.launch {
-                val newTodo = todoData(0,date,date, emptyList(),name,desc)
-                viewModel.taskDatabase.todoDataDoa().insertTodoData(newTodo)
+                val newTask = Task(0,date,name,desc)
+                viewModel.taskDatabase.taskDoa().insert(newTask)
             }
         }else{
             Toast.makeText(this, "fill all the fields", Toast.LENGTH_SHORT).show()

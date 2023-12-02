@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
@@ -16,17 +17,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.adapter.AdapterDate
 import com.example.taskmanager.adapter.AdapterTodo
+import com.example.taskmanager.adapter.TodoAdapter
 
 
 import com.example.taskmanager.databinding.ActivityHomeScreenBinding
 import com.example.taskmanager.fragments.CalenderSheet
 import com.example.taskmanager.fragments.NewOptionsSheet
+import com.example.taskmanager.models.Habit
+import com.example.taskmanager.models.Task
 
-import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.DatesViewModel
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.SwipeGesture
+import com.example.taskmanager.utils.Utils
+import com.example.taskmanager.utils.hide
+import com.example.taskmanager.utils.show
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -42,7 +48,7 @@ class HomeScreen : AppCompatActivity(){
     lateinit var datesViewModel: DatesViewModel
     lateinit var datesAdapter:AdapterDate
 //    lateinit var taskAdapter:TaskAdapter
-    lateinit var todoAdapter:AdapterTodo
+    lateinit var todoAdapter:TodoAdapter
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -83,7 +89,10 @@ class HomeScreen : AppCompatActivity(){
             Observer {
                 Log.d("taskList", "onCreate: selected Date"+it.toString())
                 if(it!=null){
-                    setUpTaskListView(it)
+                    GlobalScope.launch {
+                        setUpTaskListView(it)
+                    }
+
 
                     // updating the state of new Task button
                     // active --> if the selected date is higher of equal to today
@@ -136,17 +145,30 @@ class HomeScreen : AppCompatActivity(){
                         alertDialogBuilder.setMessage("Do you want this todo?")
                         alertDialogBuilder.setCancelable(false)
                         alertDialogBuilder.setPositiveButton("YES"){_,_, ->
-                            // taskAdapter -> todoAdapter
-                            val taskId = todoAdapter.getTaskId(viewHolder.absoluteAdapterPosition)
+                            //geting item id and itemType, before delting it from adapter
+                            val id = todoAdapter.getTaskId(viewHolder.absoluteAdapterPosition)
+                            val itemType = todoAdapter.getItemViewType(viewHolder.absoluteAdapterPosition)
+                            //delte item form adapter
+                            Log.d("swipeGesture", "onSwiped: absoluteAdapterPosition = ${viewHolder.absoluteAdapterPosition}")
                             todoAdapter.deleteItem(viewHolder.absoluteAdapterPosition)
                             todoAdapter.notifyDataSetChanged()
+                            Log.d("swipeGesture", "onSwiped: delete form adapter positive")
 
+                            // deleting task by id, from database
                             Log.d("swipeGesture", "onSwiped: taskId = ${taskId}")
                             GlobalScope.launch {
-                                // taskDoa.deleteTaskBytaskId -> todoDataDoa.deleteTodoBytaskId
-                                homeViewModel.taskDatabase.todoDataDoa().deleteTodoBytaskId(taskId)
+                                when(itemType){
+                                    Utils().TASK_VIEW_TYPE -> {
+                                        homeViewModel.taskDatabase.taskDoa().deleteTaskById(id)
+                                        Log.d("swipeGesture", "onSwiped: task delteed")
 
+                                    }
+                                    Utils().HABIT_VIEW_TYPE -> {
+                                        homeViewModel.taskDatabase.habitDoa().deleteHabitById(id)
+                                        Log.d("swipeGesture", "onSwiped: habit deleted")
 
+                                    }
+                                }
 
                             }
 
@@ -178,17 +200,41 @@ class HomeScreen : AppCompatActivity(){
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setUpTaskListView(it: LocalDate) {
+    private suspend fun setUpTaskListView(selectedDate: LocalDate) {
+
+        val habits = homeViewModel.taskDatabase.habitDoa().getHabitByDate(selectedDate)
+        val tasks = homeViewModel.taskDatabase.taskDoa().getTaskByDate(selectedDate) //        setUpRecyclerViewTodoList(tasks.toMutableList(),habits.toMutableList())
+        Log.d("TODOLIST","${tasks}, ${habits}")
+
+        // filter habits
+        val filterHabits = habits.filter {
+            it -> when(it.rangeType) {
+                Habit.HabitRangeType.CONTINUOUS ->
+                    it.endDate == null || it.endDate >= selectedDate
+
+                Habit.HabitRangeType.SPECIFIC_WEEKDAYS ->
+                    selectedDate.dayOfWeek.value  in it.weekDays!!
+
+                Habit.HabitRangeType.REPEATED_INTERVAL ->
+                    ((selectedDate.toEpochDay() - it.startDate.toEpochDay())/ it.repeatedInterval!!).toInt() == 0
 
 
-        homeViewModel.taskDatabase.todoDataDoa().getTodoByDate(it).observe(
-            this,
-            Observer {
+                else -> {false}
+        }
+        }
 
-                setUpRecyclerViewTodoList(it.toMutableList())
+        Log.d("TODOLIST","after filter ${tasks}, ${filterHabits}")
 
-            }
-        )
+//        binding.viewStubNoData.run {
+//            if(tasks.isNullOrEmpty() && habits.isNullOrEmpty()) this.visibility= View.VISIBLE
+//            else this.visibility = View.GONE
+//        }
+        Log.d("TODOLIST","after filter ${tasks}, ${filterHabits}")
+
+
+        setUpRecyclerViewTodoList(tasks.toMutableList(),filterHabits.toMutableList())
+
+
 
 
 
@@ -196,16 +242,16 @@ class HomeScreen : AppCompatActivity(){
 
     }
 
-    private fun setUpRecyclerViewTodoList(it: MutableList<todoData>) {
+    private fun setUpRecyclerViewTodoList(tasks: MutableList<Task>,habits: MutableList<Habit>) {
 
-        todoAdapter = AdapterTodo(this, it)
-        //checkbox, callback listerner implementation
-        todoAdapter.setOnCheckBoxChangeListener(object : AdapterTodo.onCheckBoxChangeListener{
+        todoAdapter = TodoAdapter(this, tasks,habits)
+        //checkbox, callback listerner implementation, for task view
+        todoAdapter.setOnCheckBoxChangeListener(object : TodoAdapter.onCheckBoxChangeListener{
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChange(id:Long, isDone: Boolean) {
                 Log.d("taskList", "onChange: box change state, ${id}")
                 GlobalScope.launch {
-                    homeViewModel.taskDatabase.todoDataDoa().updateIsDone(id,isDone)
+                    homeViewModel.taskDatabase.taskDoa().updateIsDone(id,isDone)
 
                 }
 

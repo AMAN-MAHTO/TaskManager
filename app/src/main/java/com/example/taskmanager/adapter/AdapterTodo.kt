@@ -9,9 +9,9 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.R
-import com.example.taskmanager.models.todoData
+import com.example.taskmanager.models.Task
 
-class AdapterTodo(val context:Context, var dataset: MutableList<todoData>):
+class AdapterTodo(val context:Context, var dataset: MutableList<Task>):
     RecyclerView.Adapter<AdapterTodo.TodoViewHolder>()
 {
     private lateinit var mListener: onCheckBoxChangeListener

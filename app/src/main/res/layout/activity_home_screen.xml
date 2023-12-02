@@ -76,4 +76,13 @@
         app:layout_constraintTop_toTopOf="@+id/textViewYear"
         app:srcCompat="@drawable/ic_calendar_month_24" />
 
+    <ViewStub
+        android:id="@+id/viewStubNoData"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout="@layout/view_stub_no_data"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/recyclerViewHorizontalDatePicker"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewHorizontalDatePicker" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
