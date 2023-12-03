@@ -21,6 +21,8 @@ data class Habit(
     val endDate: LocalDate? = null,
     val weekDays: List<Int>? = null,
     val repeatedInterval: Int? = null,
+    val progressType:HabitProgress.ProgressType,
+    val tagetNumber: Int? =null
 
 ){
     enum class HabitRangeType{
@@ -34,8 +36,7 @@ data class Habit(
 @Dao
 interface HabitDAO{
     @Insert
-    suspend fun insert(habit: Habit)
-
+    suspend fun insert(habit: Habit):Long
     @Delete
     suspend fun delete(habit: Habit)
 
@@ -48,4 +49,9 @@ interface HabitDAO{
     // this delte should be associated with habit progress
     @Query("DELETE FROM Habit WHERE id =:id")
     fun deleteHabitById(id: Long)
+
+    @Query("SELECT progressType FROM Habit WHERE id =:id")
+    fun getProgressTypeByHabitId(id:Long):HabitProgress.ProgressType
+
+
 }

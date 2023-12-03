@@ -6,6 +6,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
+import androidx.room.Query
 import androidx.room.Relation
 import androidx.room.Update
 import java.time.LocalDate
@@ -18,14 +19,14 @@ data class HabitProgress(
     val date: LocalDate,
     val progressType: ProgressType,
     val isDone: Boolean = false,
-    val targetNumber: Int? = null,
+    val currentNumber: Int? = null,
     val elapsedTimeInSeconds: Long? = null
 
     ){
     enum class ProgressType{
         YES_OR_NO,  // Simple yes or no progress
         TARGET_NUMBER, // progress based on reaching a target number
-        TIMER_BASED // progress based on time
+//        TIMER_BASED // progress based on time
     }
 }
 
@@ -40,4 +41,13 @@ interface HabitProgressDAO{
 
     @Update
     suspend fun update(habitProgress: HabitProgress)
+
+    @Query("SELECT * FROM HabitProgress WHERE date =:date")
+    suspend fun getProgressByDate(date: LocalDate): List<HabitProgress>
+
+    @Query("UPDATE HabitProgress SET currentNumber =:value WHERE id =:progressId")
+    fun updateNumber(value:Int,progressId:Long)
+
+    @Query("UPDATE HabitProgress SET isDone =:value WHERE id =:progressId")
+    fun updateIsDone(value:Boolean,progressId:Long)
 }

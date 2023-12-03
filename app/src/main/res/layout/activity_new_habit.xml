@@ -38,14 +38,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:text="Description"
+        app:layout_constraintStart_toStartOf="@+id/editTextHabitName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHabitName" />
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_24sdp"
         android:text="Start Date"
-        app:layout_constraintStart_toStartOf="@+id/editTextHabitName"
-        app:layout_constraintTop_toBottomOf="@+id/editTextHabitName" />
+        app:layout_constraintStart_toStartOf="@+id/editTextDescription"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
     <EditText
         android:id="@+id/editTextDateSD"
@@ -67,6 +92,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/editTextDateSD"
         app:layout_constraintStart_toEndOf="@+id/editTextDateSD"
         app:layout_constraintTop_toTopOf="@+id/editTextDateSD" />
+
     <TextView
         android:id="@+id/textView52"
         android:layout_width="wrap_content"
@@ -97,42 +123,110 @@
         app:layout_constraintBottom_toBottomOf="@+id/editTextDateED"
         app:layout_constraintStart_toEndOf="@+id/editTextDateED" />
 
-
-
     <TextView
         android:id="@+id/textView23"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" days"
         android:layout_marginBottom="@dimen/_4sdp"
+        android:text=" days"
         app:layout_constraintBottom_toBottomOf="@+id/editTextDaysCount"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
-
+        app:layout_constraintStart_toEndOf="@+id/editTextDaysCount" />
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:text="Description"
+        android:text="Habit range Type"
         app:layout_constraintStart_toStartOf="@+id/editTextDateED"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDateED" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateED"/>
 
-    <EditText
-        android:id="@+id/editTextDescription"
+
+    <RadioGroup
+        android:id="@+id/radioGroupHabitRangeType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView11"
+        >
+
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Every Day" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Specific day of week" />
+        <ViewStub
+            android:id="@+id/viewStubSpecificWeekDayHabit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout="@layout/view_stub_specific_weekday_habit"
+            />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repeat" />
+
+        <ViewStub
+            android:id="@+id/viewStubRepetedIntervalHabit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout="@layout/view_stub_repeated_interval_habit"
+            />
+
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="progress type"
+        app:layout_constraintStart_toStartOf="@+id/radioGroupHabitRangeType"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupHabitRangeType"
+        />
+
+    <RadioGroup
+        android:id="@+id/radioGroupHabitProgressType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Yes and No" />
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Taget Value" />
+
+        <ViewStub
+            android:id="@+id/viewStubTargetHabitProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout="@layout/view_stub_target_value_habit_progress"
+            />
+
+    </RadioGroup>
+
+
+
+
 
     <Button
         android:id="@+id/buttonCreateHabit"
@@ -145,5 +239,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

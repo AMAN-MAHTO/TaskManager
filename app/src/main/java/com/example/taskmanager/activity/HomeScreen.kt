@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.adapter.AdapterDate
-import com.example.taskmanager.adapter.AdapterTodo
 import com.example.taskmanager.adapter.TodoAdapter
 
 
@@ -24,6 +23,7 @@ import com.example.taskmanager.databinding.ActivityHomeScreenBinding
 import com.example.taskmanager.fragments.CalenderSheet
 import com.example.taskmanager.fragments.NewOptionsSheet
 import com.example.taskmanager.models.Habit
+import com.example.taskmanager.models.HabitProgress
 import com.example.taskmanager.models.Task
 
 import com.example.taskmanager.mvvm.DatesViewModel
@@ -31,12 +31,11 @@ import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.SwipeGesture
 import com.example.taskmanager.utils.Utils
-import com.example.taskmanager.utils.hide
-import com.example.taskmanager.utils.show
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 
 class HomeScreen : AppCompatActivity(){
@@ -163,7 +162,7 @@ class HomeScreen : AppCompatActivity(){
                                         Log.d("swipeGesture", "onSwiped: task delteed")
 
                                     }
-                                    Utils().HABIT_VIEW_TYPE -> {
+                                    Utils().HABIT_VIEW_TYPE,Utils().HABIT_TARGATED_VIEW_TYPE -> {
                                         homeViewModel.taskDatabase.habitDoa().deleteHabitById(id)
                                         Log.d("swipeGesture", "onSwiped: habit deleted")
 
@@ -204,6 +203,7 @@ class HomeScreen : AppCompatActivity(){
 
         val habits = homeViewModel.taskDatabase.habitDoa().getHabitByDate(selectedDate)
         val tasks = homeViewModel.taskDatabase.taskDoa().getTaskByDate(selectedDate) //        setUpRecyclerViewTodoList(tasks.toMutableList(),habits.toMutableList())
+        val habitsProgressList = homeViewModel.taskDatabase.habitProgressDoa().getProgressByDate(selectedDate)
         Log.d("TODOLIST","${tasks}, ${habits}")
 
         // filter habits
@@ -216,7 +216,7 @@ class HomeScreen : AppCompatActivity(){
                     selectedDate.dayOfWeek.value  in it.weekDays!!
 
                 Habit.HabitRangeType.REPEATED_INTERVAL ->
-                    ((selectedDate.toEpochDay() - it.startDate.toEpochDay())/ it.repeatedInterval!!).toInt() == 0
+                    ChronoUnit.DAYS.between(selectedDate, it.startDate) % it.repeatedInterval!! == 0L
 
 
                 else -> {false}
@@ -225,15 +225,20 @@ class HomeScreen : AppCompatActivity(){
 
         Log.d("TODOLIST","after filter ${tasks}, ${filterHabits}")
 
-//        binding.viewStubNoData.run {
-//            if(tasks.isNullOrEmpty() && habits.isNullOrEmpty()) this.visibility= View.VISIBLE
-//            else this.visibility = View.GONE
-//        }
-        Log.d("TODOLIST","after filter ${tasks}, ${filterHabits}")
 
 
-        setUpRecyclerViewTodoList(tasks.toMutableList(),filterHabits.toMutableList())
+        setUpRecyclerViewTodoList(tasks.toMutableList(),filterHabits.toMutableList(),habitsProgressList.toMutableList(),selectedDate)
+        Log.d("TODOLIST","after recycler views ${tasks}, ${filterHabits}")
 
+        runOnUiThread(object : Runnable{
+            override fun run() {
+                binding.viewStubNoData.run {
+                    if(tasks.isNullOrEmpty() && habits.isNullOrEmpty()) this.visibility= View.VISIBLE
+                    else this.visibility = View.GONE
+                }
+            }
+
+        })
 
 
 
@@ -242,9 +247,9 @@ class HomeScreen : AppCompatActivity(){
 
     }
 
-    private fun setUpRecyclerViewTodoList(tasks: MutableList<Task>,habits: MutableList<Habit>) {
+    private fun setUpRecyclerViewTodoList(tasks: MutableList<Task>,habits: MutableList<Habit>,habitsProgressList: MutableList<HabitProgress>,selectedDate:LocalDate) {
 
-        todoAdapter = TodoAdapter(this, tasks,habits)
+        todoAdapter = TodoAdapter(this, tasks,habits, habitsProgressList)
         //checkbox, callback listerner implementation, for task view
         todoAdapter.setOnCheckBoxChangeListener(object : TodoAdapter.onCheckBoxChangeListener{
             @RequiresApi(Build.VERSION_CODES.O)
@@ -259,6 +264,61 @@ class HomeScreen : AppCompatActivity(){
 
         }
         )
+
+        todoAdapter.setOnNumberPickerChangeListener(object : TodoAdapter.onNumberPickerChangeListener{
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onChange(habitId: Long, number: Int) {
+                Log.d("taskList", "onChange: number picker value, ${habitId}")
+                GlobalScope.launch {
+                    val habitsProgressListByID = habitsProgressList.filter {
+                        it.habitId == habitId
+                    }
+                    if(habitsProgressList.isEmpty()){
+                        val progressType = homeViewModel.taskDatabase.habitDoa().getProgressTypeByHabitId(habitId)
+                        val newProgress = HabitProgress(0,habitId,selectedDate,progressType, currentNumber = number)
+                        homeViewModel.taskDatabase.habitProgressDoa().insert(newProgress)
+                    }else{
+                        val progressId = habitsProgressList[0].id
+                        homeViewModel.taskDatabase.habitProgressDoa().updateNumber(number,progressId)
+
+                    }
+                }
+
+            }
+
+        })
+
+        todoAdapter.setOnCheckBoxChangeListenerHabit(object : TodoAdapter.onCheckBoxChangeListenerHabit{
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onChange(habitId: Long, isDone: Boolean) {
+                Log.d("habit", "ChangeListenerHabit: ${habitId}, ${isDone}")
+                GlobalScope.launch {
+                    val habitsProgressListByID = habitsProgressList.filter {
+                        it.habitId == habitId
+                    }
+                    Log.d("habit", "ChangeListenerHabit: habitsProgressListByID: ${habitsProgressListByID}")
+
+                    if(habitsProgressList.isEmpty()){
+                        Log.d("habit", "ChangeListenerHabit: no old progress present")
+
+                        val progressType = homeViewModel.taskDatabase.habitDoa().getProgressTypeByHabitId(habitId)
+                        val newProgress = HabitProgress(0,habitId,selectedDate,progressType, isDone = isDone)
+                        homeViewModel.taskDatabase.habitProgressDoa().insert(newProgress)
+
+                    }else{
+                        Log.d("habit", "ChangeListenerHabit: updating old progress")
+
+                        val progressId = habitsProgressList[0].id
+                        homeViewModel.taskDatabase.habitProgressDoa().updateIsDone(isDone,progressId)
+
+                    }
+                }
+            }
+
+        })
+
+
+
         binding.recyclerViewTaskList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewTaskList.adapter = todoAdapter
 
@@ -316,6 +376,8 @@ class HomeScreen : AppCompatActivity(){
 
 
 }
+
+
 
 
 

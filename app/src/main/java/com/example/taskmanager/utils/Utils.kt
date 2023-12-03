@@ -11,6 +11,7 @@ class Utils {
     // constants
     val TASK_VIEW_TYPE = 0
     val HABIT_VIEW_TYPE = 1
+    val HABIT_TARGATED_VIEW_TYPE = 2
 
 
     // local date formater

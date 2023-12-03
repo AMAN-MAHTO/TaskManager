@@ -1,11 +1,13 @@
 package com.example.taskmanager.models
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
+import kotlin.math.log
 
 class Converters {
 
@@ -50,6 +52,20 @@ class Converters {
     @TypeConverter
     fun fromListofIntToString(value: List<Int>):String{
         return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun fromProgressTypeToString(value: HabitProgress.ProgressType):String{
+        return value.toString()
+    }
+
+    @TypeConverter
+    fun fromStringToProgressType(value: String): HabitProgress.ProgressType{
+        return when(value){
+            "YES_OR_NO" -> HabitProgress.ProgressType.YES_OR_NO
+            "TARGET_NUMBER" -> HabitProgress.ProgressType.TARGET_NUMBER
+            else -> {HabitProgress.ProgressType.TARGET_NUMBER}
+        }
     }
 
 
