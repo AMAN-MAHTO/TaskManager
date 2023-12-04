@@ -9,19 +9,15 @@ import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.text.capitalize
-import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.R
 import com.example.taskmanager.databinding.ActivityNewHabitBinding
 import com.example.taskmanager.models.Habit
 import com.example.taskmanager.models.HabitProgress
-import com.example.taskmanager.models.todoData
 import com.example.taskmanager.mvvm.HomeViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.DatePickerUtil
@@ -48,6 +44,9 @@ class NewHabit : AppCompatActivity() {
     // habit progress
     var progressType = HabitProgress.ProgressType.YES_OR_NO
     var targetValue: Int? = null
+    // end date
+    lateinit var startDate:LocalDate
+    var endDate:LocalDate? = null
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -63,6 +62,7 @@ class NewHabit : AppCompatActivity() {
         if(intent.extras != null) {
             selectedDate = LocalDate.parse(intent?.getStringExtra("selectedDate"),
                 DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH))
+            binding.editTextDateSD.setText(selectedDate.toString())
 
         }
 
@@ -74,25 +74,25 @@ class NewHabit : AppCompatActivity() {
             datePickerDialogSD.showDatePickerDialog(DatePickerDialog.OnDateSetListener { datePicker, p1, p2, p3 ->
                 datePickerDialogSD.calendar.set(p1,p2,p3)
                 binding.editTextDateSD.setText((Utils().intToLocalDate(p1,p2,p3)).toString())
-                if(binding.editTextDaysCount.text != null){
-                    setEndDate(binding.editTextDaysCount.text.toString())
-                }
+                startDate = Utils().intToLocalDate(p1,p2,p3)
             })
         }
 
 
 
-        binding.editTextDaysCount.doOnTextChanged { text, start, before, count ->
-            setEndDate(text)
-
-        }
 
         // creat new habit
         binding.buttonCreateHabit.setOnClickListener() {
             val sDate =
                 LocalDate.parse(binding.editTextDateSD.text.toString(), Utils().dateFormatter)
             val eDate =
-                LocalDate.parse(binding.editTextDateED.text.toString(), Utils().dateFormatter)
+                when(binding.switchEndDate.isChecked){
+                    true -> endDate
+                    false -> null
+                }
+
+
+
             val name = binding.editTextHabitName.text.toString()
             val desc = binding.editTextDescription.text.toString()
             if (name.isNotEmpty() && desc.isNotEmpty() && eDate.toString()
@@ -158,7 +158,24 @@ class NewHabit : AppCompatActivity() {
 
         })
 
+        // switch end date view stub
+        binding.switchEndDate.setOnCheckedChangeListener { compoundButton, b ->
+            when(b){
+                true -> binding.viewStubEndDateInput.visibility = View.VISIBLE
+                false -> binding.viewStubEndDateInput.visibility = View.GONE
+            }
+        }
+
         // setup view stub, layout inflator
+        //end date view stub
+        binding.viewStubEndDateInput.setOnInflateListener { viewStub, view ->
+            val editTextDaysCount = view.findViewById<EditText>(R.id.editTextDaysCount)
+            val editTextDateED = view.findViewById<EditText>(R.id.editTextDateED)
+            editTextDaysCount.doOnTextChanged { text, start, before, count ->
+                setEndDate(text,editTextDateED)
+            }
+        }
+
         // week day habit view stub
         binding.viewStubSpecificWeekDayHabit.setOnInflateListener { viewStub, view ->
             val checkBoxList = listOf(R.id.checkBox0,R.id.checkBox1,R.id.checkBox2,R.id.checkBox3,R.id.checkBox4,
@@ -218,16 +235,18 @@ class NewHabit : AppCompatActivity() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setEndDate(daysCount: CharSequence?) {
+    private fun setEndDate(daysCount: CharSequence?, editTextDateED: EditText) {
         if (daysCount != null) {
             val sd = datePickerDialogSD.calendar.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
             if(daysCount.isNotEmpty()) {
                 val ed = sd.plusDays(daysCount.toString().toLong() - 1)
-                binding.editTextDateED.setText(ed.toString())
+                editTextDateED.setText(ed.toString())
+                endDate = ed
             }else{
-                binding.editTextDateED.setText(sd.toString())
+                editTextDateED.setText(sd.toString())
+                endDate = sd
             }
         }
     }

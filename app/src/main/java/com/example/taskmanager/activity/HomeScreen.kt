@@ -162,9 +162,12 @@ class HomeScreen : AppCompatActivity(){
                                         Log.d("swipeGesture", "onSwiped: task delteed")
 
                                     }
-                                    Utils().HABIT_VIEW_TYPE,Utils().HABIT_TARGATED_VIEW_TYPE -> {
+                                    Utils().HABIT_VIEW_TYPE-> {
                                         homeViewModel.taskDatabase.habitDoa().deleteHabitById(id)
-                                        Log.d("swipeGesture", "onSwiped: habit deleted")
+                                        Log.d("swipeGesture", "onSwiped: habit deleted form habit table")
+
+                                    }
+                                    Utils().HABIT_TARGATED_VIEW_TYPE ->{
 
                                     }
                                 }
