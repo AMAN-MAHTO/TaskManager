@@ -2,20 +2,23 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/_4sdp">
 
-    <EditText
+    <TextView
         android:id="@+id/editTextDateED"
-        android:layout_width="@dimen/_120sdp"
+        android:layout_width="@dimen/_100sdp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_date"
         android:ems="10"
         android:gravity="center"
-        android:hint="dd/mm/yyyy"
-        android:inputType="date"
-        app:layout_constraintEnd_toStartOf="@+id/editTextDaysCount"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:padding="@dimen/_4sdp"
+        android:text="00/00/0000"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextDaysCount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,13 +26,22 @@
         android:id="@+id/editTextDaysCount"
         android:layout_width="@dimen/_64sdp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:gravity="center"
         android:hint="0"
         android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextDateED"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView13"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="days"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/editTextDateED" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

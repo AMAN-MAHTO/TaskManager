@@ -32,11 +32,11 @@ class NewOptionsSheet(context:Context,val datesViewModel: DatesViewModel) : Bott
             intent.putExtra("selectedDate",datesViewModel.selectedDate.value.toString())
             startActivity(intent)
         }
-
-        binding.constraintLayoutRecurringTask.setOnClickListener(){
-            Log.d("NewOptionsSheet", "onViewCreated: recurring Task clicked")
-
-        }
+//
+//        binding.constraintLayoutRecurringTask.setOnClickListener(){
+//            Log.d("NewOptionsSheet", "onViewCreated: recurring Task clicked")
+//
+//        }
 
         binding.constraintLayoutTask.setOnClickListener(){
             val intent = Intent(context, NewTask::class.java)

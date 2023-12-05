@@ -60,9 +60,10 @@
         android:layout_height="@dimen/_42sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:layout_marginBottom="@dimen/_16sdp"
-        android:background="@drawable/bg_button_add"
+        android:background="@drawable/bg_date_adapter_selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:enabled="false"
         app:srcCompat="@drawable/icon_add" />
 
     <ImageButton

@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
@@ -170,7 +171,7 @@ class NewHabit : AppCompatActivity() {
         //end date view stub
         binding.viewStubEndDateInput.setOnInflateListener { viewStub, view ->
             val editTextDaysCount = view.findViewById<EditText>(R.id.editTextDaysCount)
-            val editTextDateED = view.findViewById<EditText>(R.id.editTextDateED)
+            val editTextDateED = view.findViewById<TextView>(R.id.editTextDateED)
             editTextDaysCount.doOnTextChanged { text, start, before, count ->
                 setEndDate(text,editTextDateED)
             }
@@ -235,7 +236,7 @@ class NewHabit : AppCompatActivity() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setEndDate(daysCount: CharSequence?, editTextDateED: EditText) {
+    private fun setEndDate(daysCount: CharSequence?, editTextDateED: TextView) {
         if (daysCount != null) {
             val sd = datePickerDialogSD.calendar.toInstant()
                 .atZone(ZoneId.systemDefault())

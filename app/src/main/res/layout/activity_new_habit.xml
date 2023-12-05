@@ -79,14 +79,18 @@
         app:layout_constraintStart_toStartOf="@+id/editTextDescription"
         app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextDateSD"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_100sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
         android:ems="10"
-        android:hint="dd/mm/yyyy"
-        android:inputType="date"
+        android:gravity="center"
+        android:background="@drawable/bg_date"
+        android:textSize="@dimen/_12ssp"
+        android:text="12/12/2001"
+        android:textStyle="bold"
+        android:padding="@dimen/_4sdp"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 

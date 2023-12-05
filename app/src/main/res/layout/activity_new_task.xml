@@ -47,14 +47,19 @@
         app:layout_constraintStart_toStartOf="@+id/editTextTaskName"
         app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextDate"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_100sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
+        android:padding="@dimen/_4sdp"
         android:ems="10"
-        android:hint="dd/mm/yyyy"
-        android:inputType="date"
+        android:gravity="center"
+        android:background="@drawable/bg_date"
+        android:textSize="@dimen/_12ssp"
+        android:text="12/12/2001"
+        android:textStyle="bold"
+
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -64,6 +69,7 @@
         android:layout_height="@dimen/_32sdp"
         android:layout_marginStart="@dimen/_32sdp"
         android:src="@drawable/ic_calendar_month_24"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="@+id/editTextDate"
         app:layout_constraintStart_toEndOf="@+id/editTextDate"
         app:layout_constraintTop_toTopOf="@+id/editTextDate" />

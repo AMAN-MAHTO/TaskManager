@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.taskmanager.R
 import com.example.taskmanager.adapter.AdapterDate
 import com.example.taskmanager.adapter.TodoAdapter
 
@@ -199,6 +200,13 @@ class HomeScreen : AppCompatActivity(){
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateCreatNewTaskButtonState(it: LocalDate) {
         binding.imageButtonCreateNewTask.isClickable = it >= datesViewModel._today
+        if(it >= datesViewModel._today){
+            binding.imageButtonCreateNewTask.setBackgroundResource(R.drawable.bg_date_selected)
+        }else{
+            binding.imageButtonCreateNewTask.setBackgroundResource(R.drawable.bg_date)
+        }
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -250,9 +258,10 @@ class HomeScreen : AppCompatActivity(){
 
     }
 
-    private fun setUpRecyclerViewTodoList(tasks: MutableList<Task>,habits: MutableList<Habit>,habitsProgressList: MutableList<HabitProgress>,selectedDate:LocalDate) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setUpRecyclerViewTodoList(tasks: MutableList<Task>, habits: MutableList<Habit>, habitsProgressList: MutableList<HabitProgress>, selectedDate:LocalDate) {
 
-        todoAdapter = TodoAdapter(this, tasks,habits, habitsProgressList)
+        todoAdapter = TodoAdapter(this, tasks,habits, habitsProgressList,selectedDate <= datesViewModel._today)
         //checkbox, callback listerner implementation, for task view
         todoAdapter.setOnCheckBoxChangeListener(object : TodoAdapter.onCheckBoxChangeListener{
             @RequiresApi(Build.VERSION_CODES.O)
@@ -321,9 +330,11 @@ class HomeScreen : AppCompatActivity(){
         })
 
 
+        runOnUiThread {
+            binding.recyclerViewTaskList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            binding.recyclerViewTaskList.adapter = todoAdapter
+        }
 
-        binding.recyclerViewTaskList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerViewTaskList.adapter = todoAdapter
 
 
     }

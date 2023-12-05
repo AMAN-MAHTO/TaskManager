@@ -62,17 +62,9 @@ class NewTask : AppCompatActivity(){
         // create new task
         binding.buttonCreateTask.setOnClickListener(){
 
-            if(binding.editTextTaskName.text.isNotEmpty()){
+
                 //new task is created
                 createTask()
-
-                // starting again the HomeScreen Activity
-                Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
-
-                startActivity(Intent(this, HomeScreen::class.java))
-            }else{
-                Toast.makeText(this,"Enter Task Name",Toast.LENGTH_SHORT).show()
-            }
 
 
         }
@@ -96,17 +88,23 @@ class NewTask : AppCompatActivity(){
         val desc = binding.editTextDescription.text.toString()
         val date = LocalDate.parse(binding.editTextDate.text.toString(),Utils().dateFormatter)
 
-        if(name.isNotEmpty() && desc.isNotEmpty() && date.toString().isNotEmpty()) {
-
-
+        if (name.isEmpty()){
+            Toast.makeText(this, "enter title", Toast.LENGTH_SHORT).show()
+        }else if(desc.isEmpty()){
+            Toast.makeText(this, "enter desc", Toast.LENGTH_SHORT).show()
+        }else{
             //todoData insert new task
             GlobalScope.launch {
                 val newTask = Task(0,date,name,desc)
                 viewModel.taskDatabase.taskDoa().insert(newTask)
             }
-        }else{
-            Toast.makeText(this, "fill all the fields", Toast.LENGTH_SHORT).show()
+
+            // starting again the HomeScreen Activity
+            Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
+
+            startActivity(Intent(this, HomeScreen::class.java))
         }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

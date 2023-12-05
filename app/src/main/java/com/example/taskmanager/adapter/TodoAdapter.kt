@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
@@ -19,7 +20,7 @@ import com.example.taskmanager.models.HabitProgress
 import com.example.taskmanager.models.Task
 import com.example.taskmanager.utils.Utils
 
-class TodoAdapter(private val context:Context,private val tasks: MutableList<Task>,private val habits: MutableList<Habit>,private val habitsProgressList: MutableList<HabitProgress>):RecyclerView.Adapter<TodoAdapter.TodoAdapterViewHolder>() {
+class TodoAdapter(private val context:Context,private val tasks: MutableList<Task>,private val habits: MutableList<Habit>,private val habitsProgressList: MutableList<HabitProgress>,private val isInputEnabledOrDisabled:Boolean):RecyclerView.Adapter<TodoAdapter.TodoAdapterViewHolder>() {
 
     private val TASK_VIEW_TYPE = Utils().TASK_VIEW_TYPE
     private val HABIT_VIEW_TYPE = Utils().HABIT_VIEW_TYPE
@@ -60,6 +61,7 @@ class TodoAdapter(private val context:Context,private val tasks: MutableList<Tas
         val editTextCurrentNumber = item.findViewById<EditText>(R.id.editTextCurrentNumber)
         val decrementButton = item.findViewById<Button>(R.id.decrementButton)
         val incrementButton = item.findViewById<Button>(R.id.incrementButton)
+        val imageViewIcLock = item.findViewById<ImageView>(R.id.imageViewIcLock)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoAdapterViewHolder {
@@ -79,68 +81,111 @@ class TodoAdapter(private val context:Context,private val tasks: MutableList<Tas
     }
 
     override fun onBindViewHolder(holder: TodoAdapterViewHolder, position: Int) {
-        Log.d("habit", "onBindViewHolder: getItemViewType(position): ${getItemViewType(position)}")
+        Log.d("todoAdapter", "onBindViewHolder: position: ${position} getItemViewType(position): ${getItemViewType(position)}, tasks: ${tasks}, habits: ${habits}")
         when(getItemViewType(position)){
             TASK_VIEW_TYPE -> {
+                Log.d("todoAdapter", "onBindViewHolder; position): ${position}, tasks: ${tasks}")
+
                 holder.textViewTitle.text = tasks[position].title.toString()
                 holder.textViewDescription.text = tasks[position].description.toString()
-
-                holder.checkBox.isChecked = tasks[position].isDone
-                holder.checkBox.setOnCheckedChangeListener { _, b ->
-                    if (position != RecyclerView.NO_POSITION) {
-                        val taskId = tasks[position].id
-                        mListener.onChange(taskId,b)
+                when(isInputEnabledOrDisabled){
+                    true -> {
+                        holder.checkBox.isChecked = tasks[position].isDone
+                        holder.checkBox.setOnCheckedChangeListener { _, b ->
+                            if (position != RecyclerView.NO_POSITION) {
+                                val taskId = tasks[position].id
+                                mListener.onChange(taskId,b)
+                            }
+                        }
+                    }
+                    false -> {
+                        holder.checkBox.visibility = View.GONE
+                        holder.imageViewIcLock.visibility = View.VISIBLE
                     }
                 }
+
+
             }
 
             HABIT_VIEW_TYPE ->{
-                holder.textViewTitle.text = habits[position].title.toString()
-                holder.textViewDescription.text = habits[position].description.toString()
-                val progress = habitsProgressList.filter {
-                    it.habitId == habits[position].id
-                }
-                if(progress.isNotEmpty()){
-                    holder.checkBox.isChecked = progress[0].isDone
+
+                val habitPosition = getHabitPosition(position)
+                Log.d("todoAdapter", "onBindViewHolder: habit index ${habitPosition}")// because habit list start from zero index, but the position value continuded after the tasks
+                holder.textViewTitle.text = habits[habitPosition].title.toString()
+                holder.textViewDescription.text = habits[habitPosition].description.toString()
+                when(isInputEnabledOrDisabled){
+                    true -> {
+                        val progress = habitsProgressList.filter {
+                            it.habitId == habits[habitPosition].id
+                        }
+                        if(progress.isNotEmpty()){
+                            holder.checkBox.isChecked = progress[0].isDone
+                        }
+
+                        holder.checkBox.setOnCheckedChangeListener { _, b ->
+                            if (habitPosition != RecyclerView.NO_POSITION) {
+                                val habitId = habits[habitPosition].id
+                                hListener.onChange(habitId,b)
+                            }
+                        }
+                    }
+                    false -> {
+                        holder.checkBox.visibility = View.GONE
+                        holder.imageViewIcLock.visibility = View.VISIBLE
+
+                    }
+
                 }
 
-                holder.checkBox.setOnCheckedChangeListener { _, b ->
-                    if (position != RecyclerView.NO_POSITION) {
-                        val habitId = habits[position].id
-                        hListener.onChange(habitId,b)
-                    }
-                }
+
             }
 
             HABIT_TARGATED_VIEW_TYPE -> {
-                holder.textViewTitle.text = habits[position].title.toString()
-                holder.textViewDescription.text = habits[position].description.toString()
-                var number = 0
+                val habitPosition = getHabitPosition(position)
+                holder.textViewTitle.text = habits[habitPosition].title.toString()
+                holder.textViewDescription.text = habits[habitPosition].description.toString()
 
-                holder.incrementButton.setOnClickListener(){
-                    number++
-                    holder.editTextCurrentNumber.setText(number.toString())
-                }
-                holder.decrementButton.setOnClickListener(){
-                    number--
-                    holder.editTextCurrentNumber.setText(number.toString())
-                }
+                when(isInputEnabledOrDisabled){
+                    true -> {
 
-                holder.editTextCurrentNumber.doOnTextChanged { text, start, before, count ->
-                    if (position != RecyclerView.NO_POSITION){
-                        if (text != null) {
-                            if(text.isNotEmpty()){
-                                number = text.toString().toInt()
+                        var number = 0
 
-                            }else{
-                                number = 0
-                            }
-                            val habitId = habits[position].id
-                            nListener.onChange(habitId,number)
+                        holder.incrementButton.setOnClickListener(){
+                            number++
+                            holder.editTextCurrentNumber.setText(number.toString())
                         }
+                        holder.decrementButton.setOnClickListener(){
+                            number--
+                            holder.editTextCurrentNumber.setText(number.toString())
+                        }
+
+                        holder.editTextCurrentNumber.doOnTextChanged { text, start, before, count ->
+                            if (position != RecyclerView.NO_POSITION){
+                                if (text != null) {
+                                    if(text.isNotEmpty()){
+                                        number = text.toString().toInt()
+
+                                    }else{
+                                        number = 0
+                                    }
+                                    val habitId = habits[habitPosition].id
+                                    nListener.onChange(habitId,number)
+                                }
+
+                            }
+                        }
+                    }
+                    false -> {
+                        holder.incrementButton.visibility = View.GONE
+                        holder.decrementButton.visibility = View.GONE
+                        holder.editTextCurrentNumber.visibility = View.GONE
+                        holder.imageViewIcLock.visibility = View.VISIBLE
+
 
                     }
                 }
+
+
 
 
 
@@ -152,15 +197,21 @@ class TodoAdapter(private val context:Context,private val tasks: MutableList<Tas
         return if(position < tasks.size){
             TASK_VIEW_TYPE
         }else{
+            val habitPosition = getHabitPosition(position)
             // check habit
-            Log.d("habit", "getItemViewType: positio ${position} ${habits[position].progressType}")
-            when(habits[position].progressType){
+            Log.d("todoAdapter", "getItemViewType: positio ${position}, habitPostion: ${habitPosition}")
+            when(habits[habitPosition].progressType){
                 HabitProgress.ProgressType.YES_OR_NO -> HABIT_VIEW_TYPE
                 HabitProgress.ProgressType.TARGET_NUMBER -> HABIT_TARGATED_VIEW_TYPE
             }
 
         }
     }
+
+    private fun getHabitPosition(position: Int):Int{
+        return position - tasks.size
+    }
+
     fun deleteItem(position: Int){
         when(getItemViewType(position)){
             TASK_VIEW_TYPE -> tasks.removeAt(position)
