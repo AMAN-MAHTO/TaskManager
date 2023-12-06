@@ -105,6 +105,12 @@ dependencies {
     //responsive layout ( https://github.com/intuit/ssp )
     implementation ("com.intuit.ssp:ssp-android:1.1.0")
 
+    //material 3
+    implementation("com.google.android.material:material:1.5.0")
+
+
+
+
 
 
 

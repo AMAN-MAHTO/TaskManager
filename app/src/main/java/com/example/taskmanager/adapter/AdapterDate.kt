@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,7 @@ class AdapterDate(val viewModel: DatesViewModel): RecyclerView.Adapter<AdapterDa
 
 
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: AdapterDateViewHolder, position: Int) {
         holder.textViewDate.text = viewModel._dates.value?.get(position)?.dayOfMonth.toString()
@@ -51,8 +53,10 @@ class AdapterDate(val viewModel: DatesViewModel): RecyclerView.Adapter<AdapterDa
 
         if(viewModel.selectedDate.value == viewModel._dates.value?.get(position)){
             holder.itemView.setBackgroundResource(R.drawable.bg_date_selected)
+            holder.textViewDay.setTextColor(R.color.white)
         }else{
             holder.itemView.setBackgroundResource(R.drawable.bg_date)
+
         }
 
 

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:shapeAppearance = "@style/ShapeAppearance.Material3.Corner.ExtraSmall"
     tools:context=".fragments.CalenderSheet">
 
 
@@ -30,18 +31,27 @@
 
         <Button
             android:id="@+id/buttonCancle"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
+
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp"
             android:layout_weight="1"
-            android:text="cancel" />
+            android:text="Cancel"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small" />
 
         <Button
             android:id="@+id/buttonToday"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp"
             android:layout_weight="1"
-            android:text="Today" />
+            android:text="Today"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small" />
     </LinearLayout>
 
 

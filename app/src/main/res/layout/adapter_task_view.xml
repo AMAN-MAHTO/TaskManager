@@ -4,16 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_4sdp"
+    android:layout_marginTop="@dimen/_2sdp"
+    android:layout_marginEnd="@dimen/_4sdp"
     android:background="@drawable/bg_task_adapter"
-    android:layout_margin="@dimen/_4sdp"
     android:padding="@dimen/_8sdp">
 
     <TextView
         android:id="@+id/textViewTitle"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+        style="@style/TextAppearance.Material3.BodyLarge"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:text="TextView"
         app:layout_constraintEnd_toStartOf="@+id/checkBoxTask"
@@ -22,14 +25,18 @@
 
     <TextView
         android:id="@+id/textViewDescription"
+        style="@style/TextAppearance.Material3.BodySmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/checkBoxTask"
         app:layout_constraintStart_toStartOf="@+id/textViewTitle"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
     <CheckBox
         android:id="@+id/checkBoxTask"
@@ -48,14 +55,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textViewTitle"
         app:srcCompat="@drawable/ic_clock" />
+
     <ImageView
         android:id="@+id/imageViewIcLock"
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
-        app:srcCompat="@drawable/ic_lock"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textViewDescription"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textViewTitle" />
+        app:layout_constraintTop_toTopOf="@+id/textViewTitle"
+        app:srcCompat="@drawable/ic_lock" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

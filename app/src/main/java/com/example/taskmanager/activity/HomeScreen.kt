@@ -131,6 +131,8 @@ class HomeScreen : AppCompatActivity(){
 
     }
 
+
+
     private fun setUpSwipeGesture() {
         val swipeGesture = object : SwipeGesture(this){
 

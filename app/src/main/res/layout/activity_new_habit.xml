@@ -16,12 +16,11 @@
 
     <TextView
         android:id="@+id/textView4"
-        style="@style/TextAppearance.Material3.HeadlineLarge"
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="New Habit"
-        android:textSize="@dimen/_24ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,6 +98,7 @@
         android:layout_width="@dimen/_32sdp"
         android:layout_height="@dimen/_32sdp"
         android:layout_marginStart="@dimen/_32sdp"
+        android:background="@null"
         android:src="@drawable/ic_calendar_month_24"
         app:layout_constraintBottom_toBottomOf="@+id/editTextDateSD"
         app:layout_constraintStart_toEndOf="@+id/editTextDateSD"

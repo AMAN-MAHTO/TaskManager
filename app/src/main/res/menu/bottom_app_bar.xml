@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/today"
+        android:icon="@drawable/ic_add_task"
+        android:title="Today"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/habit"
+        android:icon="@drawable/ic_add_habit"
+        android:title="Habit"
+        app:showAsAction="ifRoom"/>
+
+
+</menu>

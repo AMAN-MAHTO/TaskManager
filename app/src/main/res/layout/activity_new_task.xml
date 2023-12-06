@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="New Task "
-        android:textSize="@dimen/_16ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
