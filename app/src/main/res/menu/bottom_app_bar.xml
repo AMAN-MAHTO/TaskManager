@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/today"
-        android:icon="@drawable/ic_add_task"
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home"
         android:title="Today"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/habit"
-        android:icon="@drawable/ic_add_habit"
+        android:id="@+id/progress"
+        android:icon="@drawable/ic_monitoring"
         android:title="Habit"
         app:showAsAction="ifRoom"/>
 

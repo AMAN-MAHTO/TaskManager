@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -40,6 +41,7 @@ import java.time.temporal.ChronoUnit
 
 
 class HomeScreen : AppCompatActivity(){
+
     private val binding: ActivityHomeScreenBinding by lazy {
         ActivityHomeScreenBinding.inflate(layoutInflater)
     }
