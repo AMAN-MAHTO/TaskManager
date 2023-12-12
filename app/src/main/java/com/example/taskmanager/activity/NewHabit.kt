@@ -19,7 +19,7 @@ import com.example.taskmanager.R
 import com.example.taskmanager.databinding.ActivityNewHabitBinding
 import com.example.taskmanager.models.Habit
 import com.example.taskmanager.models.HabitProgress
-import com.example.taskmanager.mvvm.HomeViewModel
+import com.example.taskmanager.mvvm.MainDataViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.DatePickerUtil
 import com.example.taskmanager.utils.Utils
@@ -34,7 +34,7 @@ class NewHabit : AppCompatActivity() {
     private val binding: ActivityNewHabitBinding by lazy {
         ActivityNewHabitBinding.inflate(layoutInflater)
     }
-    private lateinit var viewModel:HomeViewModel
+    private lateinit var viewModel:MainDataViewModel
     private lateinit var datePickerDialogSD:DatePickerUtil
 
     lateinit var selectedDate:LocalDate
@@ -56,7 +56,7 @@ class NewHabit : AppCompatActivity() {
         setContentView(binding.root)
 
         // homeViewModel instance
-        viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(MainDataViewModel::class.java)
 
         // get intent
         val intent = getIntent()
@@ -105,7 +105,7 @@ class NewHabit : AppCompatActivity() {
                     createNewHabit(name,desc,rangeType,sDate,eDate,weekDays, repeatedInterval, progressType,targetValue)
                 }
 
-                startActivity(Intent(this, HomeScreen::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
 
             }else{
                 Toast.makeText(this, "fill all the fields", Toast.LENGTH_SHORT).show()

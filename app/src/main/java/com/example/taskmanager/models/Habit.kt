@@ -52,6 +52,8 @@ interface HabitDAO{
 
     @Query("SELECT progressType FROM Habit WHERE id =:id")
     fun getProgressTypeByHabitId(id:Long):HabitProgress.ProgressType
+    @Query("SELECT * FROM habit")
+    suspend fun getHabits(): List<Habit>
 
 
 }

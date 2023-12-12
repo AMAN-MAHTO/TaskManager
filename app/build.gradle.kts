@@ -108,6 +108,9 @@ dependencies {
     //material 3
     implementation("com.google.android.material:material:1.5.0")
 
+    implementation ("com.diogobernardino:williamchart:3.10.1")
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.example.taskmanager.models
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Embedded
@@ -45,9 +46,15 @@ interface HabitProgressDAO{
     @Query("SELECT * FROM HabitProgress WHERE date =:date")
     suspend fun getProgressByDate(date: LocalDate): List<HabitProgress>
 
+    @Query("SELECT * FROM HabitProgress WHERE habitId =:habitId")
+    suspend fun getProgressByHabitId(habitId: Long): List<HabitProgress>
+
     @Query("UPDATE HabitProgress SET currentNumber =:value WHERE id =:progressId")
-    fun updateNumber(value:Int,progressId:Long)
+    suspend fun updateNumber(value:Int,progressId:Long)
 
     @Query("UPDATE HabitProgress SET isDone =:value WHERE id =:progressId")
-    fun updateIsDone(value:Boolean,progressId:Long)
+    suspend fun updateIsDone(value:Boolean,progressId:Long)
+
+    @Query("SELECT COUNT(*) FROM HabitProgress WHERE habitId =:habitId AND isDone = 1")
+    fun getIsDoneCount(habitId:Long):Int
 }

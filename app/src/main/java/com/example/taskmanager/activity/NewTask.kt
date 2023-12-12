@@ -6,29 +6,23 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
-import com.example.taskmanager.R
 import com.example.taskmanager.databinding.ActivityNewTaskBinding
 import com.example.taskmanager.models.Task
 
-import com.example.taskmanager.models.todoData
-import com.example.taskmanager.mvvm.HomeViewModel
+import com.example.taskmanager.mvvm.MainDataViewModel
 import com.example.taskmanager.mvvm.HomeViewModelFactory
 import com.example.taskmanager.utils.DatePickerUtil
 import com.example.taskmanager.utils.Utils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class NewTask : AppCompatActivity(){
@@ -36,7 +30,7 @@ class NewTask : AppCompatActivity(){
         ActivityNewTaskBinding.inflate(layoutInflater)
     }
     private val calendar = Calendar.getInstance()
-    private lateinit var viewModel:HomeViewModel
+    private lateinit var viewModel:MainDataViewModel
 
 
 
@@ -55,7 +49,7 @@ class NewTask : AppCompatActivity(){
         }
 
         // homeViewModel instance
-        viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(MainDataViewModel::class.java)
 
 
 
@@ -99,10 +93,10 @@ class NewTask : AppCompatActivity(){
                 viewModel.taskDatabase.taskDoa().insert(newTask)
             }
 
-            // starting again the HomeScreen Activity
+            // starting again the HomeScreen fragment
             Toast.makeText(this,"Task Created!",Toast.LENGTH_SHORT).show()
 
-            startActivity(Intent(this, HomeScreen::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
     }
@@ -116,6 +110,10 @@ class NewTask : AppCompatActivity(){
         binding.editTextDate.setText(selectedDate.toString())
 
 
+    }
+
+    override fun getOnBackInvokedDispatcher(): OnBackInvokedDispatcher {
+        return super.getOnBackInvokedDispatcher()
     }
 
 }

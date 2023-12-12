@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.HomeScreen">
+    >
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -54,16 +54,14 @@
         app:layout_constraintStart_toStartOf="@+id/recyclerViewHorizontalDatePicker"
         app:layout_constraintTop_toBottomOf="@+id/recyclerViewHorizontalDatePicker" />
 
-    <ImageButton
-        android:id="@+id/imageButtonCreateNewTask"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingButtonCreateNewTask"
         android:layout_width="@dimen/_42sdp"
         android:layout_height="@dimen/_42sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:layout_marginBottom="@dimen/_16sdp"
-        android:background="@drawable/bg_date_adapter_selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:enabled="false"
         app:srcCompat="@drawable/icon_add" />
 
     <ImageButton

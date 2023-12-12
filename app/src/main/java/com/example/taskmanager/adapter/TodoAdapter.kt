@@ -20,7 +20,7 @@ import com.example.taskmanager.models.HabitProgress
 import com.example.taskmanager.models.Task
 import com.example.taskmanager.utils.Utils
 
-class TodoAdapter(private val context:Context,private val tasks: MutableList<Task>,private val habits: MutableList<Habit>,private val habitsProgressList: MutableList<HabitProgress>,private val isInputEnabledOrDisabled:Boolean):RecyclerView.Adapter<TodoAdapter.TodoAdapterViewHolder>() {
+class TodoAdapter(private val tasks: MutableList<Task>,private val habits: MutableList<Habit>,private val habitsProgressList: MutableList<HabitProgress>,private val isInputEnabledOrDisabled:Boolean):RecyclerView.Adapter<TodoAdapter.TodoAdapterViewHolder>() {
 
     private val TASK_VIEW_TYPE = Utils().TASK_VIEW_TYPE
     private val HABIT_VIEW_TYPE = Utils().HABIT_VIEW_TYPE
@@ -92,6 +92,7 @@ class TodoAdapter(private val context:Context,private val tasks: MutableList<Tas
                     true -> {
                         holder.checkBox.isChecked = tasks[position].isDone
                         holder.checkBox.setOnCheckedChangeListener { _, b ->
+                            Log.d("todoAdapter", "onBindViewHolder: checkbox clicked")
                             if (position != RecyclerView.NO_POSITION) {
                                 val taskId = tasks[position].id
                                 mListener.onChange(taskId,b)
