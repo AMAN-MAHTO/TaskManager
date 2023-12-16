@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleOwner
+import com.example.taskmanager.R
 import com.example.taskmanager.activity.NewHabit
 import com.example.taskmanager.activity.NewTask
 import com.example.taskmanager.databinding.FragmentNewOptionsSheetBinding
@@ -26,17 +27,14 @@ class NewOptionsSheet(val datesViewModel: DatesViewModel) : BottomSheetDialogFra
             val intent = Intent(context, NewHabit::class.java)
             intent.putExtra("selectedDate",datesViewModel.selectedDate.value.toString())
             startActivity(intent)
+            dismiss()
         }
-//
-//        binding.constraintLayoutRecurringTask.setOnClickListener(){
-//            Log.d("NewOptionsSheet", "onViewCreated: recurring Task clicked")
-//
-//        }
 
         binding.constraintLayoutTask.setOnClickListener(){
             val intent = Intent(context, NewTask::class.java)
-            intent.putExtra("selectedDate",datesViewModel.selectedDate.value.toString())
+            intent.putExtra(R.string.newTaskIntentKey.toString(),datesViewModel.selectedDate.value.toString())
             startActivity(intent)
+            dismiss()
         }
 
 

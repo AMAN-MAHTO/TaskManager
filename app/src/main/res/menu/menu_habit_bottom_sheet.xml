@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/bottomSheetHabitDeleteProgress"
+            android:checkable="true"
+            android:icon="@drawable/ic_reschedule"
+            android:title="Delete Progress" />
+
+        <item
+            android:id="@+id/bottomSheetHabitDelete"
+            android:checkable="true"
+            android:icon="@drawable/ic_delete"
+            android:title="Delete" />
+        <item
+            android:id="@+id/bottomSheetHabitEdit"
+            android:checkable="true"
+            android:icon="@drawable/ic_edit"
+            android:enabled="false"
+            android:title="Edit" />
+    </group>
+</menu>

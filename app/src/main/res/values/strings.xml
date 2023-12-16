@@ -2,4 +2,11 @@
     <string name="app_name">TaskManager</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="navigation_drawer_start">navigation drawer start</string>
+    <string name="navigation_drawer_close">navigation drawer close</string>
+    <string name="drawer_header_description">Now, Easy to manage task</string>
+    <string name="drawer_subheader_title">Choose the path</string>
+    <string name="noProgressData">Create habit to see progress.</string>
+    <string name="newTaskIntentKey">newTask</string>
+    <string name="editTaskIntentKey">editTask</string>
 </resources>

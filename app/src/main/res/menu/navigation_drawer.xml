@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/main_item"
+        android:title="@string/drawer_subheader_title">
+        <menu>
+            <item
+                android:id="@+id/naviagtionDrawerHome"
+                android:icon="@drawable/ic_home"
+                android:title="Home"
+                android:checkable="true"/>
+
+            <item
+                android:id="@+id/naviagtionDrawerNewHabit"
+                android:icon="@drawable/ic_habit"
+                android:title="New Habit"
+                android:checkable="true"/>
+            <item
+                android:id="@+id/naviagtionDrawerNewTask"
+                android:icon="@drawable/ic_task"
+                android:title="New Task"
+                android:checkable="true"/>
+            <item
+                android:id="@+id/naviagtionDrawerSettings"
+                android:icon="@drawable/ic_settings"
+                android:title="Settings"
+                android:checkable="true"/>
+        </menu>
+    </item>
+</menu>

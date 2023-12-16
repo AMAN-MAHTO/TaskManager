@@ -57,4 +57,7 @@ interface HabitProgressDAO{
 
     @Query("SELECT COUNT(*) FROM HabitProgress WHERE habitId =:habitId AND isDone = 1")
     fun getIsDoneCount(habitId:Long):Int
+
+    @Query("DELETE FROM HabitProgress WHERE habitId = :id")
+    fun deleteProgressesByHabitId(id: Long)
 }

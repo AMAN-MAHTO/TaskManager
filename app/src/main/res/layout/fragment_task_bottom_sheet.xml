@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".fragments.TaskBottomSheetFragment">
+
+    <TextView
+        android:id="@+id/textViewbottomSheetTaskName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewbottomSheetTaskDate"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Material3.BodyMedium"
+
+        app:layout_constraintStart_toStartOf="@+id/textViewbottomSheetTaskName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewbottomSheetTaskName" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationViewTaskBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewbottomSheetTaskDate"
+        app:layout_constraintVertical_bias="0.5"
+        app:menu="@menu/menu_task_bottom_sheet" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    app:headerLayout="@layout/header_navigation_drawer"-->

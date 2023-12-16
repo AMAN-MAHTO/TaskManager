@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -50,22 +51,19 @@ class NewHabit : AppCompatActivity() {
     var endDate:LocalDate? = null
 
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        //top app bar
+        binding.topAppBarHabit.setOnClickListener(){
+            onBackPressed()
+        }
+
         // homeViewModel instance
         viewModel = ViewModelProvider(this, HomeViewModelFactory(this)).get(MainDataViewModel::class.java)
-
-        // get intent
-        val intent = getIntent()
-        if(intent.extras != null) {
-            selectedDate = LocalDate.parse(intent?.getStringExtra("selectedDate"),
-                DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH))
-            binding.editTextDateSD.setText(selectedDate.toString())
-
-        }
 
         //setup date picker dialog
         datePickerDialogSD = DatePickerUtil(this)
@@ -78,6 +76,19 @@ class NewHabit : AppCompatActivity() {
                 startDate = Utils().intToLocalDate(p1,p2,p3)
             })
         }
+
+
+        // get intent
+        val intent = getIntent()
+        if(intent.extras != null) {
+            selectedDate = LocalDate.parse(intent?.getStringExtra("selectedDate"),
+                DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH))
+            binding.editTextDateSD.setText(selectedDate.toString())
+//            datePickerDialogSD.calendar.set(selectedDate.year, selectedDate.monthValue - 1, selectedDate.dayOfMonth)
+            datePickerDialogSD.calendar.set(selectedDate.year,selectedDate.monthValue -1,selectedDate.dayOfMonth)
+
+        }
+
 
 
 

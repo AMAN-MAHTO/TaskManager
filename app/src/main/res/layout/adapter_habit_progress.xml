@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/_4sdp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/textViewHabitName"
-        style="@style/TextAppearance.AppCompat.Subhead"
+        style="@style/TextAppearance.Material3.TitleMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Habit"
@@ -35,6 +35,25 @@
         app:layout_constraintEnd_toEndOf="@+id/textViewHabitName"
         app:layout_constraintStart_toStartOf="@+id/textViewHabitName"
         app:layout_constraintTop_toBottomOf="@+id/textViewHabitName" />
+    <TextView
+    android:id="@+id/textViewHabitRangeType"
+    style="@style/TextAppearance.Material3.BodySmall"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="Continuous, Every day"
+    app:layout_constraintEnd_toEndOf="@+id/textViewHabitDescription"
+    app:layout_constraintStart_toStartOf="@+id/textViewHabitDescription"
+    app:layout_constraintTop_toBottomOf="@+id/textViewHabitDescription" />
+
+    <TextView
+        android:id="@+id/textViewHabitProgressType"
+        style="@style/TextAppearance.Material3.BodySmall"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Progress type"
+        app:layout_constraintEnd_toEndOf="@+id/textViewHabitRangeType"
+        app:layout_constraintStart_toStartOf="@+id/textViewHabitRangeType"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHabitRangeType" />
 
     <TextView
         android:id="@+id/textViewHabitStartDate"
@@ -42,22 +61,49 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="12/09/2023"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textViewHabitEndDate"
         app:layout_constraintEnd_toEndOf="@+id/textViewHabitDescription"
-        app:layout_constraintStart_toStartOf="@+id/textViewHabitDescription" />
+        app:layout_constraintStart_toStartOf="@+id/textViewHabitDescription"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHabitProgressType"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textViewHabitEndDate"
+        style="@style/TextAppearance.Material3.BodySmall"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="12/09/2023"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textViewHabitStartDate"
+        app:layout_constraintStart_toStartOf="@+id/textViewHabitStartDate" />
 
     <com.db.williamchart.view.DonutChartView
         android:id="@+id/donutChart"
         android:layout_width="@dimen/_90sdp"
         android:layout_height="@dimen/_90sdp"
-        app:chart_donutBackgroundColor="@color/grey"
-        app:chart_donutRoundCorners="false"
+        app:chart_donutBackgroundColor="@color/lightGrey"
+
+        android:rotation="545"
+        app:chart_donutRoundCorners="true"
         app:chart_donutThickness="@dimen/_6sdp"
+
         app:chart_donutTotal="200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.5" >
+
+    </com.db.williamchart.view.DonutChartView>
+
+    <TextView
+        android:id="@+id/textViewProgressNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/donutChart"
+        app:layout_constraintEnd_toEndOf="@+id/donutChart"
+        app:layout_constraintStart_toStartOf="@+id/donutChart"
+        app:layout_constraintTop_toTopOf="@+id/donutChart" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

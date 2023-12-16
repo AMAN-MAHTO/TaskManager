@@ -4,26 +4,28 @@
 
     <application
         android:allowBackup="true"
-        android:largeHeap="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.NewHabit"
-            android:exported="true"/>
-
-
+            android:exported="true" />
         <activity
             android:name=".activity.NewTask"
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

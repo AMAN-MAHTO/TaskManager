@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/_32sdp"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_date_selected"
+
     android:layout_margin="@dimen/_4sdp">
 
     <TextView
@@ -24,10 +26,12 @@
     <TextView
         android:id="@+id/textViewDate"
         style="@style/TextAppearance.Material3.BodyLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_6sdp"
-        android:layout_marginBottom="@dimen/_6sdp"
+    android:background="@null"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:paddingBottom="@dimen/_4sdp"
         android:text="1"
 
         app:layout_constraintBottom_toBottomOf="parent"

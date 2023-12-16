@@ -1,6 +1,5 @@
 package com.example.taskmanager.adapter
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +8,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.NumberPicker
 import android.widget.TextView
-import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.R
@@ -28,6 +25,21 @@ class TodoAdapter(private val tasks: MutableList<Task>,private val habits: Mutab
     private lateinit var mListener: onCheckBoxChangeListener
     private lateinit var nListener: onNumberPickerChangeListener
     private lateinit var hListener: onCheckBoxChangeListenerHabit
+    private lateinit var taskLongPressListener: onTaskLongClickListener
+    private lateinit var habitLongPressListener: onHabitLongClickListener
+
+    interface onTaskLongClickListener{
+        fun onTaskLongClick(task: Task, position: Int)
+    }
+    fun setOnTaskLongClickListener(listener: onTaskLongClickListener){
+        taskLongPressListener = listener
+    }
+    interface onHabitLongClickListener{
+        fun onHabitLongClick(habit: Habit, position: Int)
+    }
+    fun setOnHabitLongClickListener(listener: onHabitLongClickListener){
+        habitLongPressListener = listener
+    }
     interface onCheckBoxChangeListener{
         fun onChange(taskId: Long, isDone: Boolean)
     }
@@ -62,6 +74,7 @@ class TodoAdapter(private val tasks: MutableList<Task>,private val habits: Mutab
         val decrementButton = item.findViewById<Button>(R.id.decrementButton)
         val incrementButton = item.findViewById<Button>(R.id.incrementButton)
         val imageViewIcLock = item.findViewById<ImageView>(R.id.imageViewIcLock)
+        val imageViewIcon = item.findViewById<ImageView>(R.id.imageViewIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoAdapterViewHolder {
@@ -85,7 +98,7 @@ class TodoAdapter(private val tasks: MutableList<Task>,private val habits: Mutab
         when(getItemViewType(position)){
             TASK_VIEW_TYPE -> {
                 Log.d("todoAdapter", "onBindViewHolder; position): ${position}, tasks: ${tasks}")
-
+                // set task data
                 holder.textViewTitle.text = tasks[position].title.toString()
                 holder.textViewDescription.text = tasks[position].description.toString()
                 when(isInputEnabledOrDisabled){
@@ -105,6 +118,13 @@ class TodoAdapter(private val tasks: MutableList<Task>,private val habits: Mutab
                     }
                 }
 
+                // task long press listener
+                holder.itemView.setOnLongClickListener {
+
+                    taskLongPressListener.onTaskLongClick(tasks[position],position)
+                    true
+                }
+
 
             }
 
@@ -114,6 +134,7 @@ class TodoAdapter(private val tasks: MutableList<Task>,private val habits: Mutab
                 Log.d("todoAdapter", "onBindViewHolder: habit index ${habitPosition}")// because habit list start from zero index, but the position value continuded after the tasks
                 holder.textViewTitle.text = habits[habitPosition].title.toString()
                 holder.textViewDescription.text = habits[habitPosition].description.toString()
+                holder.imageViewIcon.setImageResource(R.drawable.ic_habit)
                 when(isInputEnabledOrDisabled){
                     true -> {
                         val progress = habitsProgressList.filter {
@@ -136,6 +157,13 @@ class TodoAdapter(private val tasks: MutableList<Task>,private val habits: Mutab
 
                     }
 
+                }
+
+                // habit long press listener
+                holder.itemView.setOnLongClickListener {
+
+                    habitLongPressListener.onHabitLongClick(habits[position],position)
+                    true
                 }
 
 
@@ -192,6 +220,9 @@ class TodoAdapter(private val tasks: MutableList<Task>,private val habits: Mutab
 
             }
         }
+
+        // item long press
+
     }
 
     override fun getItemViewType(position: Int): Int {

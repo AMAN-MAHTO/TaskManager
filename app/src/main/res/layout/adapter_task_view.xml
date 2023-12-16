@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/textViewTitle"
-        style="@style/TextAppearance.Material3.BodyLarge"
+        style="@style/TextAppearance.Material3.TitleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
@@ -20,7 +20,7 @@
         android:layout_marginEnd="@dimen/_8sdp"
         android:text="TextView"
         app:layout_constraintEnd_toStartOf="@+id/checkBoxTask"
-        app:layout_constraintStart_toEndOf="@+id/imageViewTaskIcon"
+        app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -28,7 +28,7 @@
         style="@style/TextAppearance.Material3.BodySmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+
         android:layout_marginEnd="@dimen/_8sdp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
@@ -48,13 +48,13 @@
         app:layout_constraintTop_toTopOf="@+id/textViewTitle" />
 
     <ImageView
-        android:id="@+id/imageViewTaskIcon"
-        android:layout_width="@dimen/_32sdp"
-        android:layout_height="@dimen/_32sdp"
+        android:id="@+id/imageViewIcon"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textViewTitle"
-        app:srcCompat="@drawable/ic_clock" />
+        app:srcCompat="@drawable/ic_task" />
 
     <ImageView
         android:id="@+id/imageViewIcLock"

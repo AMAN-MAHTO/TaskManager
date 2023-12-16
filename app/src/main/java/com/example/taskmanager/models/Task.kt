@@ -15,10 +15,10 @@ import java.time.LocalDate
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id:Long =0,
-    val date:LocalDate,
-    val title: String,
-    val description: String,
-    val isDone: Boolean = false
+    var date:LocalDate,
+    var title: String,
+    var description: String,
+    var isDone: Boolean = false
 )
 
 @Dao
@@ -40,5 +40,7 @@ interface TaskDAO{
 
     @Query("DELETE FROM Task WHERE id =:id")
     fun deleteTaskById(id: Long)
+    @Query("SELECT * FROM Task WHERE id =:taskId")
+    fun getTaskById(taskId: Long):LiveData<Task>
 
 }

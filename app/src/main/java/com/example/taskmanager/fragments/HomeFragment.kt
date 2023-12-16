@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.taskmanager.R
 import com.example.taskmanager.adapter.AdapterDate
 import com.example.taskmanager.adapter.TodoAdapter
 import com.example.taskmanager.databinding.FragmentHomeBinding
@@ -25,6 +26,7 @@ import com.example.taskmanager.mvvm.DatesViewModel
 import com.example.taskmanager.mvvm.MainDataViewModel
 import com.example.taskmanager.utils.SwipeGesture
 import com.example.taskmanager.utils.Utils
+import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,13 +38,17 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
     private lateinit var binding: FragmentHomeBinding
     lateinit var datesAdapter:AdapterDate
     lateinit var todoAdapter: TodoAdapter
+    //to update top bar title
+    lateinit var topAppBar:MaterialToolbar
 
     @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.textViewMonth.text = "m"
+        topAppBar = requireActivity().findViewById<MaterialToolbar>(R.id.topAppBar)
+        topAppBar.title = ""
+        topAppBar.menu.getItem(0).setVisible(true) // seting visiblity of calender button visible
 
         // ---------- //
         datesViewModel._dates.observe(viewLifecycleOwner,
@@ -80,7 +86,7 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
                     // updating the state of new Task button
                     // active --> if the selected date is higher of equal to today
                     // deactivate --> if the selected date is lower than today
-                    updateCreatNewTaskButtonState(it)
+
 
 
 
@@ -89,23 +95,27 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
         )
 
 
-//
+
+        // top bar
+        topAppBar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.calenderDateSelector ->{
+                    CalenderSheet(datesViewModel).show(childFragmentManager,"Calender Sheet")
+                    true
+                }
+
+                else -> {true}
+            }
+        }
+
+
 
 
         // buttons
-        // Create new Task button
-        binding.floatingButtonCreateNewTask.setOnClickListener(){
-            NewOptionsSheet(datesViewModel).show(childFragmentManager,"NewOptionsSheet")
-        }
-
-        //date piccker dialog
-        binding.imageButtonCalender.setOnClickListener(){
-            CalenderSheet(datesViewModel).show(childFragmentManager,"Calender Sheet")
-        }
 
 
-        //swipe gesture
-        setUpSwipeGesture()
+        // set the swipe gesture
+//        setUpSwipeGesture()
 
 
     }
@@ -132,7 +142,7 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
 
                         val alertDialogBuilder = AlertDialog.Builder(context)
 
-                        alertDialogBuilder.setMessage("Do you want viewLifecycleOwner todo?")
+                        alertDialogBuilder.setMessage("Do you want Delete")
                         alertDialogBuilder.setCancelable(false)
                         alertDialogBuilder.setPositiveButton("YES"){_,_, ->
                             //geting item id and itemType, before delting it from adapter
@@ -146,20 +156,23 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
 
                             // deleting task by id, from database
                             viewLifecycleOwner.lifecycleScope.launch {
-                                when(itemType){
-                                    Utils().TASK_VIEW_TYPE -> {
-                                        mainDataViewModel.taskDatabase.taskDoa().deleteTaskById(id)
-                                        Log.d("swipeGesture", "onSwiped: task delteed")
+                                withContext(Dispatchers.IO){
+                                    when(itemType){
+                                        Utils().TASK_VIEW_TYPE -> {
+                                            mainDataViewModel.taskDatabase.taskDoa().deleteTaskById(id)
+                                            Log.d("swipeGesture", "onSwiped: task delteed")
 
-                                    }
-                                    Utils().HABIT_VIEW_TYPE-> {
-                                        mainDataViewModel.taskDatabase.habitDoa().deleteHabitById(id)
-                                        Log.d("swipeGesture", "onSwiped: habit deleted form habit table")
+                                        }
+                                        Utils().HABIT_VIEW_TYPE-> {
+                                            mainDataViewModel.taskDatabase.habitDoa().deleteHabitById(id)
+                                            Log.d("swipeGesture", "onSwiped: habit deleted form habit table")
 
-                                    }
-                                    Utils().HABIT_TARGATED_VIEW_TYPE ->{
+                                        }
+                                        Utils().HABIT_TARGATED_VIEW_TYPE ->{
 
+                                        }
                                     }
+
                                 }
 
                             }
@@ -184,14 +197,10 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
         }
 
         val itemtouchHelper = ItemTouchHelper(swipeGesture)
-        itemtouchHelper.attachToRecyclerView(binding.recyclerViewTaskList)    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateCreatNewTaskButtonState(it: LocalDate) {
-        binding.floatingButtonCreateNewTask.isEnabled = it >= datesViewModel._today
+        itemtouchHelper.attachToRecyclerView(binding.recyclerViewTaskList)
+        }
 
 
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun setUpTaskListView(selectedDate: LocalDate) {
@@ -199,6 +208,7 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
         val habits = mainDataViewModel.taskDatabase.habitDoa().getHabitByDate(selectedDate)
         val tasks = mainDataViewModel.taskDatabase.taskDoa().getTaskByDate(selectedDate) //        setUpRecyclerViewTodoList(tasks.toMutableList(),habits.toMutableList())
         val habitsProgressList = mainDataViewModel.taskDatabase.habitProgressDoa().getProgressByDate(selectedDate)
+
         Log.d("TODOLIST","${tasks}, ${habits}")
 
         // filter habits
@@ -234,18 +244,13 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
 
 
 
-
-
-
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpRecyclerViewTodoList(tasks: MutableList<Task>, habits: MutableList<Habit>, habitsProgressList: MutableList<HabitProgress>, selectedDate: LocalDate) {
 
-//        todoAdapter = TodoAdapter(context, tasks,habits, habitsProgressList,selectedDate <= datesViewModel._today)
-        todoAdapter = TodoAdapter(tasks,habits, habitsProgressList,true)
+        todoAdapter = TodoAdapter(tasks,habits, habitsProgressList,selectedDate <= datesViewModel._today)
+//        todoAdapter = TodoAdapter(tasks,habits, habitsProgressList,true)
 
         //checkbox, callback listerner implementation, for task view
         todoAdapter.setOnCheckBoxChangeListener(object : TodoAdapter.onCheckBoxChangeListener{
@@ -338,6 +343,43 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
 
         })
 
+        // item long press listeners
+        todoAdapter.setOnTaskLongClickListener(object : TodoAdapter.onTaskLongClickListener{
+            override fun onTaskLongClick(task: Task, position: Int) {
+                val taskBottomSheetFragment = TaskBottomSheetFragment(task,mainDataViewModel)
+                taskBottomSheetFragment.setOnItemDeleteCallback(object : TaskBottomSheetFragment.onItemDeleteCallback{
+                    override fun onItemDeleted() {
+                        todoAdapter.deleteItem(position)
+                        todoAdapter.notifyDataSetChanged()
+                        if(todoAdapter.itemCount == 0){
+                            binding.viewStubNoData.visibility = View.VISIBLE
+                        }
+                    }
+
+                })
+                taskBottomSheetFragment.show(childFragmentManager,"taskBottomShetFragment")
+            }
+
+        })
+
+        todoAdapter.setOnHabitLongClickListener(object : TodoAdapter.onHabitLongClickListener{
+            override fun onHabitLongClick(habit: Habit, position: Int) {
+                val habitBottomSheetFragment = HabitBottomSheetFragment(habit,mainDataViewModel)
+                habitBottomSheetFragment.setOnItemDeleteCallback(object : HabitBottomSheetFragment.onItemDeleteCallback{
+                    override fun onItemDeleted() {
+                        todoAdapter.deleteItem(position)
+                        todoAdapter.notifyDataSetChanged()
+                        if(todoAdapter.itemCount == 0){
+                            binding.viewStubNoData.visibility = View.VISIBLE
+                        }
+                    }
+
+                })
+                habitBottomSheetFragment.show(childFragmentManager,"taskBottomShetFragment")
+            }
+
+        })
+
 
 
         binding.recyclerViewTaskList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -348,12 +390,18 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
 
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onDestroyView() {
+        datesViewModel.selectedDate.value?.let { datesViewModel.getDatesBetween(it) }
+        super.onDestroyView()
+    }
 
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpHorizontalDatePicker(viewModel: DatesViewModel) {
+
+        //
         datesAdapter = AdapterDate(viewModel)
         binding.recyclerViewHorizontalDatePicker.layoutManager = LinearLayoutManager(context,
             LinearLayoutManager.HORIZONTAL,false)
@@ -374,23 +422,20 @@ class HomeFragment(private val mainDataViewModel: MainDataViewModel, private val
                 val firstVisibleItemDate = datesAdapter.getItem(firstVisibleItemPosition) // Assuming the date is stored in a property named 'date'
 
 
-                viewModel.month.value = firstVisibleItemDate.month.toString()
-                viewModel.year.value = firstVisibleItemDate.year.toString()
+                viewModel.monthAndYear.value = firstVisibleItemDate.month.toString()+", "+firstVisibleItemDate.year.toString()
+
             }
         }
         )
 
 
         //
-        viewModel.month.observe(viewLifecycleOwner,
+        viewModel.monthAndYear.observe(viewLifecycleOwner,
             Observer {
-                binding.textViewMonth.text = it
+                topAppBar.title = it
             })
 
-        viewModel.year.observe(viewLifecycleOwner,
-            Observer {
-                binding.textViewYear.text = ", "+it
-            })
+
 
 
 

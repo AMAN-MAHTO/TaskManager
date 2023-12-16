@@ -29,8 +29,7 @@ class DatesViewModel: ViewModel() {
 
     val _dates = MutableLiveData<List<LocalDate>>()
 
-    val month = MutableLiveData<String>(_today.month.toString())
-    val year = MutableLiveData<String>(_today.year.toString())
+    val monthAndYear = MutableLiveData<String>(_today.month.toString()+", "+_today.year.toString())
 
     val selectedDate = MutableLiveData<LocalDate>(_today)
 
@@ -40,6 +39,7 @@ class DatesViewModel: ViewModel() {
 
         getDatesBetween(centerDate.value!!)
         Log.d("adapterDate", "onCreateViewHolder: "+_dates.toString())
+
     }
 
 

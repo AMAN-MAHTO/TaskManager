@@ -2,20 +2,24 @@ package com.example.taskmanager.mvvm
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.taskmanager.models.Habit
+import com.example.taskmanager.models.HabitProgress
 
 import com.example.taskmanager.models.MainDatabase
+import com.example.taskmanager.models.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import kotlin.math.log
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -91,29 +95,31 @@ class MainDataViewModel(context: Context): ViewModel() {
             val Live = MutableLiveData<Pair<List<Habit>, Map<Long, List<Int>>>>()
             var habits = listOf<Habit>()
             var progress = mutableMapOf<Long, List<Int>>()
-        val _today = LocalDate.now()
+        var _today = LocalDate.now()
 
         viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     habits = taskDatabase.habitDoa().getHabits()
                     habits.forEach {
+                        if(it.endDate != null) _today = it.endDate
                         progress[it.id] =
                             listOf(
                                 taskDatabase.habitProgressDoa().getIsDoneCount(it.id),
-                                if(it.startDate < _today){
+                                if(it.startDate <= _today){
                                     when (it.rangeType) {
-                                        Habit.HabitRangeType.CONTINUOUS -> ChronoUnit.DAYS.between(
+                                        Habit.HabitRangeType.CONTINUOUS -> {ChronoUnit.DAYS.between(
                                             it.startDate,
                                             _today
-                                        ).toInt()
+                                        ).toInt() + 1 }
 
                                         Habit.HabitRangeType.SPECIFIC_WEEKDAYS -> getWeekDaysCount(it,_today)
                                         Habit.HabitRangeType.REPEATED_INTERVAL -> (ChronoUnit.DAYS.between(
                                             it.startDate,
                                             _today
-                                        ) / it.repeatedInterval!!).toInt()
+                                        ) / it.repeatedInterval!!).toInt() +1
                                     }
-                                }else{
+                                }
+                                else{
                                     0
                                 }
 
@@ -127,5 +133,48 @@ class MainDataViewModel(context: Context): ViewModel() {
             return Live
 
         }
+
+    fun deleteTask(id: Long) {
+        Log.d("fragment", "deleteTask: deleting task with id ${id}")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                taskDatabase.taskDoa().deleteTaskById(id)
+            }
+        }
+    }
+
+    fun deleteHabit(id: Long) {
+        Log.d("fragment", "deleteTask: deleting habit with id ${id}")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                taskDatabase.habitDoa().deleteHabitById(id)
+            }
+        }
+    }
+
+    fun deleteHabitAllProgress(id: Long) {
+        Log.d("fragment", "deleteTask: deleting habit progress with id ${id}")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                taskDatabase.habitProgressDoa().deleteProgressesByHabitId(id)
+            }
+        }
+    }
+
+    fun recreateTask(task: Task, date:LocalDate) {
+        val newTask = Task(0,date,task.title,task.description)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                taskDatabase.taskDoa().insert(newTask)
+            }
+        }
+
+    }
+
+//    suspend fun getTodoData(): LiveData<Pair<List<Task>,Pair<List<Habit>,List<HabitProgress>>>> {
+//        val habits = taskDatabase.habitDoa().getHabitByDate(selectedDate)
+//        val tasks = taskDatabase.taskDoa().getTaskByDate(selectedDate) //        setUpRecyclerViewTodoList(tasks.toMutableList(),habits.toMutableList())
+//        val habitsProgressList = taskDatabase.habitProgressDoa().getProgressByDate(selectedDate)
+//    }
 
 }

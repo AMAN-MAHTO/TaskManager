@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/bottomSheetTaskReshedule"
+            android:checkable="true"
+            android:icon="@drawable/ic_reschedule"
+            android:title="Reschedule" />
+
+        <item
+            android:id="@+id/bottomSheetTaskDelete"
+            android:checkable="true"
+            android:icon="@drawable/ic_delete"
+            android:title="Delete" />
+        <item
+            android:id="@+id/bottomSheetTaskEdit"
+            android:checkable="true"
+            android:icon="@drawable/ic_edit"
+            android:title="Edit" />
+    </group>
+</menu>
