@@ -48,9 +48,9 @@ class MainActivity : AppCompatActivity(){
         binding.navigationView.setNavigationItemSelectedListener{
             when(it.itemId){
 
-                R.id.naviagtionDrawerNewHabit -> startActivity(Intent(this,NewHabit::class.java))
+                R.id.naviagtionDrawerNewHabit -> startActivity(Intent(this,NewHabit::class.java).putExtra("selectedDate",datesViewModel.selectedDate.value.toString()))
 
-                R.id.naviagtionDrawerNewTask -> startActivity(Intent(this,NewTask::class.java))
+                R.id.naviagtionDrawerNewTask -> startActivity(Intent(this,NewTask::class.java).putExtra(R.string.newTaskIntentKey.toString(),datesViewModel.selectedDate.value.toString()))
 
                 R.id.naviagtionDrawerSettings -> startActivity(Intent(this,SettingsActivity::class.java))
 

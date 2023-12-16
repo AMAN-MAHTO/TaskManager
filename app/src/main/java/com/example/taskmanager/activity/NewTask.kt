@@ -50,6 +50,17 @@ class NewTask : AppCompatActivity() {
         // MainDataViewModel instance
         mainDataViewModel =
             ViewModelProvider(this, HomeViewModelFactory(this)).get(MainDataViewModel::class.java)
+        // date picker dialog
+        datePicker = DatePickerUtil(this)
+        val datePickerListener =
+            DatePickerDialog.OnDateSetListener { p0: DatePicker?, p1: Int, p2: Int, p3: Int ->
+                datePicker.calendar.set(p1, p2, p3)
+                binding.editTextDate.setText((Utils().intToLocalDate(p1, p2, p3)).toString())
+            }
+        binding.imageButtonCalender.setOnClickListener() {
+            datePicker.showDatePickerDialog(datePickerListener)
+        }
+
 
         // get intent
         val intent = getIntent()
@@ -76,16 +87,6 @@ class NewTask : AppCompatActivity() {
 
 
 
-        // date picker dialog
-        datePicker = DatePickerUtil(this)
-        val datePickerListener =
-            DatePickerDialog.OnDateSetListener { p0: DatePicker?, p1: Int, p2: Int, p3: Int ->
-                datePicker.calendar.set(p1, p2, p3)
-                binding.editTextDate.setText((Utils().intToLocalDate(p1, p2, p3)).toString())
-            }
-        binding.imageButtonCalender.setOnClickListener() {
-            datePicker.showDatePickerDialog(datePickerListener)
-        }
 
     }
 
