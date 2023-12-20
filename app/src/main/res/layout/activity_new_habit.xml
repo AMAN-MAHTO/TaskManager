@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-     >
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,8 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
-                app:title="Habit"
-                app:navigationIcon="@drawable/ic_left_arrow" />
+                app:navigationIcon="@drawable/ic_left_arrow"
+                app:title="Habit" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,27 +39,23 @@
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
 
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
                 android:id="@+id/editTextHabitNameLayout"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Habit"
+                android:text="Habit"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-                <EditText
-                    android:id="@+id/editTextHabitName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:ems="10"
-                    android:inputType="text"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
+            <EditText
+                android:id="@+id/editTextHabitName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_constraintStart_toStartOf="@+id/editTextHabitNameLayout"
+                app:layout_constraintTop_toBottomOf="@+id/editTextHabitNameLayout" />
 
 
             <androidx.constraintlayout.widget.Guideline
@@ -70,38 +65,36 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
                 android:id="@+id/editTextHabitDescriptionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Description"
                 android:layout_marginTop="@dimen/_8sdp"
-                app:layout_constraintStart_toStartOf="@+id/editTextHabitNameLayout"
-                app:layout_constraintTop_toBottomOf="@+id/editTextHabitNameLayout">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:ems="10"
-                    android:inputType="text"
-
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:text="Description"
 
 
+                app:layout_constraintStart_toStartOf="@+id/editTextHabitName"
+                app:layout_constraintTop_toBottomOf="@+id/editTextHabitName" />
+
+            <EditText
+                android:id="@+id/editTextDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_constraintStart_toStartOf="@+id/editTextHabitDescriptionLayout"
+                app:layout_constraintTop_toBottomOf="@+id/editTextHabitDescriptionLayout" />
 
 
             <TextView
                 android:id="@+id/textView5"
-                style="@style/TextAppearance.Material3.TitleMedium"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Start Date"
-                app:layout_constraintStart_toStartOf="@+id/editTextHabitDescriptionLayout"
-                app:layout_constraintTop_toBottomOf="@+id/editTextHabitDescriptionLayout" />
+                app:layout_constraintStart_toStartOf="@+id/editTextDescription"
+                app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
             <TextView
                 android:id="@+id/editTextDateSD"
@@ -141,9 +134,9 @@
 
                 <Switch
                     android:id="@+id/switchEndDate"
+        
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/TextAppearance.Material3.TitleMedium"
                     android:text="End Date      " />
 
                 <ViewStub
@@ -158,11 +151,11 @@
 
             <TextView
                 android:id="@+id/textView11"
+                style="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_24sdp"
                 android:text="Habit range Type"
-                style="@style/TextAppearance.Material3.TitleMedium"
                 app:layout_constraintStart_toStartOf="@+id/linearLayoutEnddate"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutEnddate" />
 
@@ -215,11 +208,11 @@
 
             <TextView
                 android:id="@+id/textView12"
+                style="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_24sdp"
                 android:text="Progress type"
-                style="@style/TextAppearance.Material3.TitleMedium"
                 app:layout_constraintStart_toStartOf="@+id/radioGroupHabitRangeType"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroupHabitRangeType" />
 
@@ -246,7 +239,7 @@
                     android:layout_margin="@dimen/_4sdp"
 
                     android:enabled="false"
-                    android:text="Target Value" />
+                    android:text="Target Value, comming soon!" />
 
                 <ViewStub
                     android:id="@+id/viewStubTargetHabitProgress"

@@ -17,6 +17,7 @@ import com.example.taskmanager.R
 import com.example.taskmanager.models.Habit
 import com.example.taskmanager.models.HabitProgress
 import com.example.taskmanager.mvvm.MainDataViewModel
+import com.example.taskmanager.utils.Utils
 
 
 class AdapterHabitProgress(
@@ -75,16 +76,17 @@ private val listOfColor = listOf(
         val data = listOf( progress[habits[position].id]!![0].toFloat())// Sample data, replace with your data
 //        val data = listOf(2f,3f,4f)
         val total = progress[habits[position].id]!![1]
+        holder.textViewProgressNumber.text = "0 / ${total}"
         if(total != 0) {
 
-            holder.textViewProgressNumber.text = "${data[0]} / ${total}"
+            holder.textViewProgressNumber.text = "${data[0].toInt()} / ${total}"
 
         }
 
         holder.donutChart.donutTotal = total.toFloat()
         holder.donutChart.animation.duration = 1000L
         holder.donutChart.animate(data)
-        holder.textViewProgressNumber.text = "0 / ${total}"
+
 
 
         holder.textViewHabitName.text = habits[position].title
@@ -98,7 +100,7 @@ private val listOfColor = listOf(
 
         holder.textViewHabitRangeType.text = when(habits[position].rangeType){
             Habit.HabitRangeType.CONTINUOUS -> "Continuous/EveryDay"
-            Habit.HabitRangeType.SPECIFIC_WEEKDAYS ->"WeekDays: ${habits[position].weekDays}"
+            Habit.HabitRangeType.SPECIFIC_WEEKDAYS ->"WeekDays: ${Utils().intToWeekDay(habits[position].weekDays!!)}"
             Habit.HabitRangeType.REPEATED_INTERVAL -> "Repeate every ${habits[position].repeatedInterval} days"
         }
 

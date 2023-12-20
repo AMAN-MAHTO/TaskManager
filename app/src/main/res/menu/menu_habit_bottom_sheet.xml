@@ -20,6 +20,6 @@
             android:checkable="true"
             android:icon="@drawable/ic_edit"
             android:enabled="false"
-            android:title="Edit" />
+            android:title="Edit, comming soon!" />
     </group>
 </menu>

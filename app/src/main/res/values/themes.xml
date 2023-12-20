@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
-
-        <item name="android:statusBarColor">#0000</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-
+    <style name="AppTheme1" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
@@ -33,4 +29,11 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
     </style>
+
+    <style name="AppTheme1main" parent="AppTheme1">
+        <item name="android:statusBarColor">#0000</item>
+    </style>
+
+
+
 </resources>

@@ -33,4 +33,21 @@ class Utils {
             DateTimeFormatter.ofPattern("dd/MM/uuuu", Locale.ENGLISH))
     }
 
+    fun intToWeekDay(list: List<Int>): String {
+        var output:String=""
+        list.forEach(){
+            output += when(it){
+                1->"Mo, "
+                2->"Tu, "
+                3->"We, "
+                4->"Th, "
+                5->"Fr, "
+                6->"Sa, "
+                7->"Su "
+                else -> {""}
+            }
+        }
+        return output
+    }
+
 }

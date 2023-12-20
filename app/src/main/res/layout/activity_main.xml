@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.MainActivity"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
+    tools:openDrawer="end"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,11 +55,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_navigation_bar" />
 
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingButtonCreateNewTask"
-            android:layout_width="@dimen/_42sdp"
-            android:layout_height="@dimen/_42sdp"
-            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/_16sdp"
 
             app:layout_constraintBottom_toBottomOf="@+id/frameLayoutMainActivity"

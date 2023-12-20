@@ -39,6 +39,7 @@
     android:id="@+id/textViewHabitRangeType"
     style="@style/TextAppearance.Material3.BodySmall"
     android:layout_width="0dp"
+        android:layout_marginTop="@dimen/_4sdp"
     android:layout_height="wrap_content"
     android:text="Continuous, Every day"
     app:layout_constraintEnd_toEndOf="@+id/textViewHabitDescription"
@@ -49,6 +50,8 @@
         android:id="@+id/textViewHabitProgressType"
         style="@style/TextAppearance.Material3.BodySmall"
         android:layout_width="0dp"
+        android:layout_marginTop="@dimen/_4sdp"
+
         android:layout_height="wrap_content"
         android:text="Progress type"
         app:layout_constraintEnd_toEndOf="@+id/textViewHabitRangeType"

@@ -9,4 +9,5 @@
     <string name="noProgressData">Create habit to see progress.</string>
     <string name="newTaskIntentKey">newTask</string>
     <string name="editTaskIntentKey">editTask</string>
+    <string name="editHabitIntentKey">edit habit intent key</string>
 </resources>

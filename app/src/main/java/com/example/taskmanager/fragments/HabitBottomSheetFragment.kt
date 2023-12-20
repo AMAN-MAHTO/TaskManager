@@ -1,19 +1,18 @@
 package com.example.taskmanager.fragments
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.example.taskmanager.R
 import com.example.taskmanager.databinding.FragmentHabitBottomSheetBinding
-import com.example.taskmanager.databinding.FragmentTaskBottomSheetBinding
 import com.example.taskmanager.models.Habit
-import com.example.taskmanager.models.Task
 import com.example.taskmanager.mvvm.MainDataViewModel
+import com.example.taskmanager.utils.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -35,7 +34,7 @@ class HabitBottomSheetFragment(private val habit: Habit,val mainDataViewModel: M
         binding.textViewbottomSheetHabitStartingDate.text = habit.startDate.toString()
         binding.textViewbottomSheetHabitRangeType.text = when(habit.rangeType){
             Habit.HabitRangeType.CONTINUOUS -> "Every Day"
-            Habit.HabitRangeType.SPECIFIC_WEEKDAYS -> habit.weekDays.toString()
+            Habit.HabitRangeType.SPECIFIC_WEEKDAYS -> Utils().intToWeekDay(habit.weekDays!!)
             Habit.HabitRangeType.REPEATED_INTERVAL -> "Repeat every ${habit.repeatedInterval} days."
         }
         if (habit.endDate != null) {
