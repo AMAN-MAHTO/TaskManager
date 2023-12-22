@@ -1,6 +1,6 @@
 # Task Manager
 Track tasks, habits & progress easily.
->Download https://drive.google.com/file/d/1psj8sywJGcELGA4HQk5-KYm-RaPFpo0m/view?usp=sharing
+>Download https://apkpure.com/taskmanager/com.example.taskmanager
 
 ## Description
 Effortlessly manage your daily tasks and habits with TaskManager. Seamlessly view and track your habits' progress using a convenient horizontal date selector. Create, delete, and update tasks swiftly, while establishing habits on a continuous, weekly, or repetitive basis. Trace your habits with simple 'yes/no' tracking and get ready for upcoming features like setting target values. Take control of your productivity and routine today with TaskManager.
